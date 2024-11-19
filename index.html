@@ -106,41 +106,47 @@
             container.appendChild(newInput);
         }
 
-        async function searchSequences() {
-            try {
-                // Get all subsequences
-                const subsequenceInputs = document.querySelectorAll('input[name="subsequence"]');
-                const subsequences = Array.from(subsequenceInputs)
-                    .map(input => input.value)
-                    .filter(value => value.trim() !== '');
-        
-                // Fetch and parse CSV
-                const response = await fetch('https://donn-liew.github.io/my-test-static-page/data/test.csv');
-                const csvText = await response.text();
-                const rows = csvText.split('\n').map(row => row.split(','));
-                const headers = rows[0];
-                const data = rows.slice(1);
-        
-                // Search for matches
-                const results = data.filter(row => {
-                    // If no subsequences entered, include all rows
-                    if (subsequences.length === 0) {
-                        return true;
-                    }
-                    
-                    const sequence = row[headers.indexOf('sequence')];
-                    // Only check subsequences if they exist
-                    return subsequences.every(subseq => sequence && subseq && sequence.includes(subseq));
-                });
-        
-                // Display results
-                displayResults(headers, results);
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('results').innerHTML = 
-                    `<p style="color: red;">Error loading or processing data: ${error.message}</p>`;
-            }
-        }
+    async function searchSequences() {
+        try {
+            // Get all subsequences
+            const subsequenceInputs = document.querySelectorAll('input[name="subsequence"]');
+            const subsequences = Array.from(subsequenceInputs)
+                .map(input => input.value)
+                .filter(value => value.trim() !== '');
+    
+            // Get ion concentrations
+            const k = document.getElementById('k').value;
+            const na = document.getElementById('na').value;
+            const li_nh4 = document.getElementById('li_nh4').value;
+    
+            // Fetch and parse CSV
+            const response = await fetch('https://donn-liew.github.io/my-test-static-page/data/test.csv');
+            const csvText = await response.text();
+            const rows = csvText.split('\n').map(row => row.split(','));
+            const headers = rows[0];
+            const data = rows.slice(1);
+    
+            // Search for matches
+            const results = data.filter(row => {
+                // Get column indices
+                const sequenceIdx = headers.indexOf('sequence');
+                const kIdx = headers.indexOf('k');
+                const naIdx = headers.indexOf('na');
+                const liNh4Idx = headers.indexOf('li/nh4');
+    
+                const sequence = row[sequenceIdx];
+                
+                // Check subsequences
+                const sequenceMatch = subsequences.length === 0 || 
+                    subsequences.every(subseq => sequence && subseq && sequence.includes(subseq));
+                
+                // Check ion concentrations
+                const kMatch = !k || row[kIdx] === k;
+                const naMatch = !na || row[naIdx] === na;
+                const liNh4Match = !li_nh4 || row[liNh4Idx] === li_nh4;
+    
+                return sequenceMatch && kMatch && naMatch && liNh4Match;
+            });
 
         function displayResults(headers, results) {
             const resultsDiv = document.getElementById('results');
