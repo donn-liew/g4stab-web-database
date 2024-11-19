@@ -3,13 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subsequence Input</title>
+    <title>Subsequence and Ion Input</title>
 </head>
 <body>
-    <h1>Enter a Subsequence</h1>
+    <h1>Enter Search Parameters</h1>
+    
     <form>
-        <label for="subsequence">Subsequence:</label><br>
-        <input type="text" id="subsequence" name="subsequence"><br>
+        <div>
+            <label for="subsequence">Subsequence:</label><br>
+            <input type="text" id="subsequence" name="subsequence"><br><br>
+        </div>
+
+        <div>
+            <label for="kplus">K+:</label><br>
+            <select id="kplus" name="kplus">
+                <option value="">Select concentration</option>
+                <option value="0">0 mM</option>
+                <option value="50">50 mM</option>
+                <option value="100">100 mM</option>
+            </select><br><br>
+        </div>
+
+        <div>
+            <label for="naplus">Na+:</label><br>
+            <select id="naplus" name="naplus">
+                <option value="">Select concentration</option>
+                <option value="10">10 mM</option>
+                <option value="20">20 mM</option>
+                <option value="30">30 mM</option>
+            </select><br><br>
+        </div>
+
+        <div>
+            <label for="linh4plus">Li+/NH4+:</label><br>
+            <select id="linh4plus" name="linh4plus">
+                <option value="">Select concentration</option>
+                <option value="0">0 mM</option>
+                <option value="5">5 mM</option>
+                <option value="10">10 mM</option>
+            </select><br><br>
+        </div>
+
         <input type="submit" value="Submit">
     </form>
 </body>
