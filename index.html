@@ -5,11 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subsequence and Ion Input</title>
     <style>
+        /* Force full width overrides */
+        body {
+            max-width: none !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 20px !important;
+        }
+    
+        /* Container styles combined */
         .container {
+            max-width: none !important;
+            width: 100% !important;
             display: flex;
             justify-content: center;
             margin: 20px;
         }
+    
+        /* Results styles combined */
+        #results {
+            max-width: none !important;
+            width: 100% !important;
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    
+        /* Rest of your styles */
         .subsequences-and-ions {
             display: flex;
             align-items: flex-start;
@@ -28,12 +51,6 @@
         .ion-dropdowns {
             display: flex;
             gap: 20px;
-        }
-        #results {
-            margin: 20px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
         }
         table {
             width: 100%;
