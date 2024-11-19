@@ -148,25 +148,25 @@
                 resultsDiv.innerHTML = '<p>No matches found.</p>';
                 return;
             }
-
+        
             let tableHTML = `
                 <h2>Results (${results.length} matches found)</h2>
                 <table>
                     <thead>
                         <tr>
-                            ${headers.map(header => `<th>${header}</th>`).join('')}
+                            ${headers.slice(1).map(header => `<th>${header}</th>`).join('')}
                         </tr>
                     </thead>
                     <tbody>
                         ${results.map(row => `
                             <tr>
-                                ${row.map(cell => `<td>${cell}</td>`).join('')}
+                                ${row.slice(1).map(cell => `<td>${cell}</td>`).join('')}
                             </tr>
                         `).join('')}
                     </tbody>
                 </table>
             `;
-
+        
             resultsDiv.innerHTML = tableHTML;
         }
     </script>
