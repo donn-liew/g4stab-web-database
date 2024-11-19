@@ -15,13 +15,14 @@
             align-items: flex-start;
             gap: 50px;
         }
+        .subsequences-section {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
         .subsequences-container {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-        }
-        .subsequence-row {
-            display: flex;
             gap: 10px;
         }
         .ion-dropdowns {
@@ -35,11 +36,11 @@
     
     <div class="container">
         <div class="subsequences-and-ions">
-            <div class="subsequences-container" id="subsequences">
-                <div class="subsequence-row">
+            <div class="subsequences-section">
+                <div class="subsequences-container" id="subsequences">
                     <input type="text" name="subsequence" placeholder="Enter subsequence">
-                    <button type="button" onclick="addNewSubsequence()">+</button>
                 </div>
+                <button type="button" onclick="addNewSubsequence()">+</button>
             </div>
 
             <div class="ion-dropdowns">
@@ -73,13 +74,11 @@
     <script>
         function addNewSubsequence() {
             const container = document.getElementById('subsequences');
-            const newRow = document.createElement('div');
-            newRow.className = 'subsequence-row';
-            newRow.innerHTML = `
-                <input type="text" name="subsequence" placeholder="Enter subsequence">
-                <button type="button" onclick="addNewSubsequence()">+</button>
-            `;
-            container.appendChild(newRow);
+            const newInput = document.createElement('input');
+            newInput.type = 'text';
+            newInput.name = 'subsequence';
+            newInput.placeholder = 'Enter subsequence';
+            container.appendChild(newInput);
         }
     </script>
 </body>
