@@ -4,47 +4,114 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subsequence and Ion Input</title>
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px;
+        }
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .ion-dropdowns {
+            display: flex;
+            gap: 20px;
+        }
+        .subsequence-container {
+            display: flex;
+            gap: 10px;
+        }
+        #rows-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Enter Search Parameters</h1>
+    <h1 style="text-align: center;">Enter Search Parameters</h1>
     
-    <form>
-        <div>
-            <label for="subsequence">Subsequence:</label><br>
-            <input type="text" id="subsequence" name="subsequence"><br><br>
-        </div>
+    <div id="rows-container">
+        <div class="container">
+            <div class="row">
+                <div class="subsequence-container">
+                    <input type="text" id="subsequence" name="subsequence" placeholder="Enter subsequence">
+                    <button type="button" onclick="addNewRow()">+</button>
+                </div>
+                
+                <div class="ion-dropdowns">
+                    <select id="kplus" name="kplus">
+                        <option value="">K+</option>
+                        <option value="0">0 mM</option>
+                        <option value="50">50 mM</option>
+                        <option value="100">100 mM</option>
+                        <option value="150">150 mM</option>
+                    </select>
 
-        <div>
-            <label for="kplus">K+:</label><br>
-            <select id="kplus" name="kplus">
-                <option value="">Select concentration</option>
-                <option value="0">0 mM</option>
-                <option value="50">50 mM</option>
-                <option value="100">100 mM</option>
-            </select><br><br>
-        </div>
+                    <select id="naplus" name="naplus">
+                        <option value="">Na+</option>
+                        <option value="0">0 mM</option>
+                        <option value="50">50 mM</option>
+                        <option value="100">100 mM</option>
+                        <option value="150">150 mM</option>
+                    </select>
 
-        <div>
-            <label for="naplus">Na+:</label><br>
-            <select id="naplus" name="naplus">
-                <option value="">Select concentration</option>
-                <option value="10">10 mM</option>
-                <option value="20">20 mM</option>
-                <option value="30">30 mM</option>
-            </select><br><br>
+                    <select id="linh4plus" name="linh4plus">
+                        <option value="">Li+/NH4+</option>
+                        <option value="0">0 mM</option>
+                        <option value="50">50 mM</option>
+                        <option value="100">100 mM</option>
+                        <option value="150">150 mM</option>
+                    </select>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <div>
-            <label for="linh4plus">Li+/NH4+:</label><br>
-            <select id="linh4plus" name="linh4plus">
-                <option value="">Select concentration</option>
-                <option value="0">0 mM</option>
-                <option value="5">5 mM</option>
-                <option value="10">10 mM</option>
-            </select><br><br>
-        </div>
+    <script>
+        function addNewRow() {
+            const container = document.getElementById('rows-container');
+            const newRow = document.createElement('div');
+            newRow.className = 'container';
+            newRow.innerHTML = `
+                <div class="row">
+                    <div class="subsequence-container">
+                        <input type="text" name="subsequence" placeholder="Enter subsequence">
+                        <button type="button" onclick="addNewRow()">+</button>
+                    </div>
+                    
+                    <div class="ion-dropdowns">
+                        <select name="kplus">
+                            <option value="">K+</option>
+                            <option value="0">0 mM</option>
+                            <option value="50">50 mM</option>
+                            <option value="100">100 mM</option>
+                            <option value="150">150 mM</option>
+                        </select>
 
-        <input type="submit" value="Submit">
-    </form>
+                        <select name="naplus">
+                            <option value="">Na+</option>
+                            <option value="0">0 mM</option>
+                            <option value="50">50 mM</option>
+                            <option value="100">100 mM</option>
+                            <option value="150">150 mM</option>
+                        </select>
+
+                        <select name="linh4plus">
+                            <option value="">Li+/NH4+</option>
+                            <option value="0">0 mM</option>
+                            <option value="50">50 mM</option>
+                            <option value="100">100 mM</option>
+                            <option value="150">150 mM</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+            container.appendChild(newRow);
+        }
+    </script>
 </body>
 </html>
