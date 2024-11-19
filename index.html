@@ -8,107 +8,76 @@
         .container {
             display: flex;
             justify-content: center;
-            align-items: center;
             margin: 20px;
         }
-        .row {
+        .subsequences-and-ions {
             display: flex;
-            align-items: center;
-            gap: 20px;
+            align-items: flex-start;
+            gap: 50px;
+        }
+        .subsequences-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .subsequence-row {
+            display: flex;
+            gap: 10px;
         }
         .ion-dropdowns {
             display: flex;
             gap: 20px;
-        }
-        .subsequence-container {
-            display: flex;
-            gap: 10px;
-        }
-        #rows-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
         }
     </style>
 </head>
 <body>
     <h1 style="text-align: center;">Enter Search Parameters</h1>
     
-    <div id="rows-container">
-        <div class="container">
-            <div class="row">
-                <div class="subsequence-container">
-                    <input type="text" id="subsequence" name="subsequence" placeholder="Enter subsequence">
-                    <button type="button" onclick="addNewRow()">+</button>
+    <div class="container">
+        <div class="subsequences-and-ions">
+            <div class="subsequences-container" id="subsequences">
+                <div class="subsequence-row">
+                    <input type="text" name="subsequence" placeholder="Enter subsequence">
+                    <button type="button" onclick="addNewSubsequence()">+</button>
                 </div>
-                
-                <div class="ion-dropdowns">
-                    <select id="kplus" name="kplus">
-                        <option value="">K+</option>
-                        <option value="0">0 mM</option>
-                        <option value="50">50 mM</option>
-                        <option value="100">100 mM</option>
-                        <option value="150">150 mM</option>
-                    </select>
+            </div>
 
-                    <select id="naplus" name="naplus">
-                        <option value="">Na+</option>
-                        <option value="0">0 mM</option>
-                        <option value="50">50 mM</option>
-                        <option value="100">100 mM</option>
-                        <option value="150">150 mM</option>
-                    </select>
+            <div class="ion-dropdowns">
+                <select id="kplus" name="kplus">
+                    <option value="">K+</option>
+                    <option value="0">0 mM</option>
+                    <option value="50">50 mM</option>
+                    <option value="100">100 mM</option>
+                    <option value="150">150 mM</option>
+                </select>
 
-                    <select id="linh4plus" name="linh4plus">
-                        <option value="">Li+/NH4+</option>
-                        <option value="0">0 mM</option>
-                        <option value="50">50 mM</option>
-                        <option value="100">100 mM</option>
-                        <option value="150">150 mM</option>
-                    </select>
-                </div>
+                <select id="naplus" name="naplus">
+                    <option value="">Na+</option>
+                    <option value="0">0 mM</option>
+                    <option value="50">50 mM</option>
+                    <option value="100">100 mM</option>
+                    <option value="150">150 mM</option>
+                </select>
+
+                <select id="linh4plus" name="linh4plus">
+                    <option value="">Li+/NH4+</option>
+                    <option value="0">0 mM</option>
+                    <option value="50">50 mM</option>
+                    <option value="100">100 mM</option>
+                    <option value="150">150 mM</option>
+                </select>
             </div>
         </div>
     </div>
 
     <script>
-        function addNewRow() {
-            const container = document.getElementById('rows-container');
+        function addNewSubsequence() {
+            const container = document.getElementById('subsequences');
             const newRow = document.createElement('div');
-            newRow.className = 'container';
+            newRow.className = 'subsequence-row';
             newRow.innerHTML = `
-                <div class="row">
-                    <div class="subsequence-container">
-                        <input type="text" name="subsequence" placeholder="Enter subsequence">
-                        <button type="button" onclick="addNewRow()">+</button>
-                    </div>
-                    
-                    <div class="ion-dropdowns">
-                        <select name="kplus">
-                            <option value="">K+</option>
-                            <option value="0">0 mM</option>
-                            <option value="50">50 mM</option>
-                            <option value="100">100 mM</option>
-                            <option value="150">150 mM</option>
-                        </select>
-
-                        <select name="naplus">
-                            <option value="">Na+</option>
-                            <option value="0">0 mM</option>
-                            <option value="50">50 mM</option>
-                            <option value="100">100 mM</option>
-                            <option value="150">150 mM</option>
-                        </select>
-
-                        <select name="linh4plus">
-                            <option value="">Li+/NH4+</option>
-                            <option value="0">0 mM</option>
-                            <option value="50">50 mM</option>
-                            <option value="100">100 mM</option>
-                            <option value="150">150 mM</option>
-                        </select>
-                    </div>
-                </div>
+                <input type="text" name="subsequence" placeholder="Enter subsequence">
+                <button type="button" onclick="addNewSubsequence()">+</button>
             `;
             container.appendChild(newRow);
         }
