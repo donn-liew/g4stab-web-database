@@ -102,6 +102,25 @@
                 justify-content: center;
             }
         }
+            .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+    }
+    
+    #loading {
+        text-align: center;
+        margin: 20px;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
     </style>
 </head>
 <body>
@@ -147,82 +166,110 @@
     <div style="text-align: center;">
         <button onclick="searchSequences()">Search</button>
     </div>
-
+    
+    <div id="loading" style="display: none;">
+    <div class="loading-spinner"></div>
+    <div>Loading data... <span id="progress">0/0</span> files</div>
+    </div>
     <div id="results"></div>
 
     <script>
-        function addNewSubsequence() {
-            const container = document.getElementById('subsequences');
-            const newInput = document.createElement('input');
-            newInput.type = 'text';
-            newInput.name = 'subsequence';
-            newInput.placeholder = 'Enter subsequence';
-            container.appendChild(newInput);
+let globalData = null;
+let isLoading = false;
+
+async function loadInitialData() {
+    if (isLoading || globalData) return;
+    
+    isLoading = true;
+    const loadingDiv = document.getElementById('loading');
+    const progressSpan = document.getElementById('progress');
+    loadingDiv.style.display = 'block';
+
+    try {
+        const files = ['test1.csv', 'test.csv'];  // Your current files
+        const baseUrl = 'https://donn-liew.github.io/my-test-static-page/data/';
+        
+        progressSpan.textContent = `0/${files.length}`;
+        
+        let allData = [];
+        let headers = null;
+        
+        for(let i = 0; i < files.length; i++) {
+            const response = await fetch(baseUrl + files[i]);
+            const csvText = await response.text();
+            const rows = csvText.split('\n').map(row => row.split(','));
+            
+            if (!headers) {
+                headers = rows[0];
+            }
+            
+            allData.push(...rows.slice(1));
+            progressSpan.textContent = `${i + 1}/${files.length}`;
         }
+
+        globalData = {
+            headers: headers,
+            data: allData
+        };
+        
+        loadingDiv.style.display = 'none';
+    } catch (error) {
+        console.error('Error loading data:', error);
+        loadingDiv.innerHTML = 'Error loading data. Please refresh the page.';
+    } finally {
+        isLoading = false;
+    }
+}
+
+function addNewSubsequence() {
+    const container = document.getElementById('subsequences');
+    const newInput = document.createElement('input');
+    newInput.type = 'text';
+    newInput.name = 'subsequence';
+    newInput.placeholder = 'Enter subsequence';
+    container.appendChild(newInput);
+}
 
 async function searchSequences() {
     try {
-        // Get all subsequences (unchanged)
+        if (!globalData) {
+            await loadInitialData();
+        }
+
         const subsequenceInputs = document.querySelectorAll('input[name="subsequence"]');
         const subsequences = Array.from(subsequenceInputs)
             .map(input => input.value)
             .filter(value => value.trim() !== '');
 
-        // Get ion concentrations (unchanged)
         const k = document.getElementById('k').value;
         const na = document.getElementById('na').value;
         const li_nh4 = document.getElementById('li_nh4').value;
 
-        // NEW: Define files to load
-        const files = ['test1.csv', 'test.csv'];  // ADD YOUR FILES HERE
-        const baseUrl = 'https://donn-liew.github.io/my-test-static-page/data/';
-        
-        // NEW: Load all files
-        const responses = await Promise.all(
-            files.map(file => fetch(baseUrl + file))
-        );
-        
-        const csvTexts = await Promise.all(
-            responses.map(response => response.text())
-        );
-        
-        // NEW: Parse all files and combine data
-        const allData = csvTexts.map(text => text.split('\n').map(row => row.split(',')));
-        const headers = allData[0][0];  // Get headers from first file
-        const data = allData.flatMap((fileData, index) => 
-            index === 0 ? fileData.slice(1) : fileData.slice(1)  // Skip headers except first file
-        );
+        const sequenceIdx = globalData.headers.indexOf('sequence');
+        const kIdx = globalData.headers.indexOf('k');
+        const naIdx = globalData.headers.indexOf('na');
+        const liNh4Idx = globalData.headers.indexOf('li/nh4');
 
-        // Get column indices (unchanged)
-        const sequenceIdx = headers.indexOf('sequence');
-        const kIdx = headers.indexOf('k');
-        const naIdx = headers.indexOf('na');
-        const liNh4Idx = headers.indexOf('li/nh4');
-
-        // Search for matches (unchanged logic, just moved indices outside loop)
-        const results = data.filter(row => {
+        const results = globalData.data.filter(row => {
             const sequence = row[sequenceIdx];
             
-            // Check subsequences
             const sequenceMatch = subsequences.length === 0 || 
                 subsequences.every(subseq => sequence && subseq && sequence.includes(subseq));
             
-            // Check ion concentrations
             const kMatch = !k || row[kIdx] === k;
             const naMatch = !na || row[naIdx] === na;
             const liNh4Match = !li_nh4 || row[liNh4Idx] === li_nh4;
 
             return sequenceMatch && kMatch && naMatch && liNh4Match;
         });
-        
-                // Display results
-                displayResults(headers, results);
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('results').innerHTML = 
-                    `<p style="color: red;">Error loading or processing data: ${error.message}</p>`;
-            }
-        }
+
+        displayResults(globalData.headers, results);
+    } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('results').innerHTML = 
+            `<p style="color: red;">Error searching data: ${error.message}</p>`;
+    }
+}
 
 function displayResults(headers, results) {
     const resultsDiv = document.getElementById('results');
@@ -232,8 +279,7 @@ function displayResults(headers, results) {
         return;
     }
 
-    // Skip the first column (index) and get actual data columns
-    const dataHeaders = headers.slice(1);  // Skip ',' or '0' column
+    const dataHeaders = headers.slice(1);
     
     let tableHTML = `
         <h2>Results (${results.length} matches found)</h2>
@@ -254,6 +300,9 @@ function displayResults(headers, results) {
     `;
     resultsDiv.innerHTML = tableHTML;
 }
+
+// Add this line at the end to load data when page loads
+document.addEventListener('DOMContentLoaded', loadInitialData);
     </script>
 </body>
 </html>
