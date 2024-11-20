@@ -280,9 +280,15 @@ function displayResults(headers, results) {
     }
 
     const dataHeaders = headers.slice(1);
+    const maxDisplay = 10000;
+    const displayResults = results.slice(0, maxDisplay);
+    
+    let noteText = results.length > maxDisplay ? 
+        `<p style="color: #666;">(Showing first ${maxDisplay.toLocaleString()} results out of ${results.length.toLocaleString()} total matches)</p>` : '';
     
     let tableHTML = `
-        <h2>Results (${results.length} matches found)</h2>
+        <h2>Results (${results.length.toLocaleString()} matches found)</h2>
+        ${noteText}
         <table>
             <thead>
                 <tr>
@@ -290,7 +296,7 @@ function displayResults(headers, results) {
                 </tr>
             </thead>
             <tbody>
-                ${results.map(row => `
+                ${displayResults.map(row => `
                     <tr>
                         ${row.slice(1).map(cell => `<td>${cell}</td>`).join('')}
                     </tr>
