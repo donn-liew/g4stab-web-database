@@ -134,34 +134,56 @@
                 </div>
                 <button type="button" onclick="addNewSubsequence()">+</button>
             </div>
-
             <div class="ion-dropdowns">
-                <select id="k" name="k">
-                    <option value="">K+</option>
-                    <option value="0">0 mM</option>
-                    <option value="50">50 mM</option>
-                    <option value="100">100 mM</option>
-                    <option value="150">150 mM</option>
-                </select>
-
-                <select id="na" name="na">
-                    <option value="">Na+</option>
-                    <option value="0">0 mM</option>
-                    <option value="50">50 mM</option>
-                    <option value="100">100 mM</option>
-                    <option value="150">150 mM</option>
-                </select>
-
-                <select id="li_nh4" name="li_nh4">
-                    <option value="">Li+/NH4+</option>
-                    <option value="0">0 mM</option>
-                    <option value="50">50 mM</option>
-                    <option value="100">100 mM</option>
-                    <option value="150">150 mM</option>
-                </select>
+                <div class="ion-dropdown">
+                    <label for="k">K+</label>
+                    <select id="k" name="k">
+                        <option value="">Select</option>
+                        <option value="0">0 mM</option>
+                        <option value="50">50 mM</option>
+                        <option value="100">100 mM</option>
+                        <option value="150">150 mM</option>
+                    </select>
+                </div>
+                <div class="ion-dropdown">
+                    <label for="na">Na+</label>
+                    <select id="na" name="na">
+                        <option value="">Select</option>
+                        <option value="0">0 mM</option>
+                        <option value="50">50 mM</option>
+                        <option value="100">100 mM</option>
+                        <option value="150">150 mM</option>
+                    </select>
+                </div>
+                <div class="ion-dropdown">
+                    <label for="li_nh4">Li+/NH4+</label>
+                    <select id="li_nh4" name="li_nh4">
+                        <option value="">Select</option>
+                        <option value="0">0 mM</option>
+                        <option value="50">50 mM</option>
+                        <option value="100">100 mM</option>
+                        <option value="150">150 mM</option>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
+    
+    <style>
+    .ion-dropdowns {
+        display: flex;
+        gap: 20px;
+    }
+    
+    .ion-dropdown {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .ion-dropdown label {
+        margin-bottom: 5px;
+    }
+    </style>
 
     <div style="text-align: center;">
         <button onclick="searchSequences()">Search</button>
@@ -286,7 +308,7 @@ function displayResults(headers, results) {
     const displayResults = results.slice(0, maxDisplay);
     
     let noteText = results.length > maxDisplay ? 
-        `<p style="color: #666;">(Only first ${maxDisplay.toLocaleString()} results out of ${results.length.toLocaleString()} total matches are shown)</p>` : '';
+        `<p style="color: #666;">(Only first ${maxDisplay.toLocaleString()} results are shown)</p>` : '';
     
     let tableHTML = `
         <h2>Results (${results.length.toLocaleString()} matches found)</h2>
