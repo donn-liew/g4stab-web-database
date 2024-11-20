@@ -50,23 +50,24 @@
             margin-top: 44px;
         }
         
+        .subsequences-section {
+            width: 75%;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
         .subsequences-container {
-            display: flex;          /* This will now be row direction */
-            align-items: flex-start; /* Align items at the top */
+            display: flex;
+            flex-direction: column;
             gap: 10px;
             width: 400px;
         }
         
-        .subsequences-container input {
-            width: 100%;
-            height: 40px;           /* Your desired height */
-        }
-
         .ion-dropdowns {
             width: 25%;
             display: flex;
             gap: 20px;
-            margin-top: 24px;
         }
 
         .ion-dropdown {
@@ -154,39 +155,30 @@
             <button type="button" onclick="addNewSubsequence()">+</button>
         </div>
         <div class="ion-dropdowns">
-            <div class="ion-dropdown">
-                    <label for="k">K+</label>
-                    <select id="k" name="k">
-                        <option value="">Select</option>
-                        <option value="0">0 mM</option>
-                        <option value="50">50 mM</option>
-                        <option value="100">100 mM</option>
-                        <option value="150">150 mM</option>
-                    </select>
-                </div>
-                <div class="ion-dropdown">
-                    <label for="na">Na+</label>
-                    <select id="na" name="na">
-                        <option value="">Select</option>
-                        <option value="0">0 mM</option>
-                        <option value="50">50 mM</option>
-                        <option value="100">100 mM</option>
-                        <option value="150">150 mM</option>
-                    </select>
-                </div>
-                <div class="ion-dropdown">
-                    <label for="li_nh4">Li+/NH4+</label>
-                    <select id="li_nh4" name="li_nh4">
-                        <option value="">Select</option>
-                        <option value="0">0 mM</option>
-                        <option value="50">50 mM</option>
-                        <option value="100">100 mM</option>
-                        <option value="150">150 mM</option>
-                    </select>
-                </div>
-            </div>
+            <select id="k" name="k">
+                <option value="">K+</option>
+                <option value="0">0 mM</option>
+                <option value="50">50 mM</option>
+                <option value="100">100 mM</option>
+                <option value="150">150 mM</option>
+            </select>
+            <select id="na" name="na">
+                <option value="">Na+</option>
+                <option value="0">0 mM</option>
+                <option value="50">50 mM</option>
+                <option value="100">100 mM</option>
+                <option value="150">150 mM</option>
+            </select>
+            <select id="li_nh4" name="li_nh4">
+                <option value="">Li+/NH4+</option>
+                <option value="0">0 mM</option>
+                <option value="50">50 mM</option>
+                <option value="100">100 mM</option>
+                <option value="150">150 mM</option>
+            </select>
         </div>
     </div>
+</div>
     
     <style>
     .ion-dropdowns {
