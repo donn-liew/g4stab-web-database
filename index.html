@@ -286,7 +286,7 @@ function displayResults(headers, results) {
     const displayResults = results.slice(0, maxDisplay);
     
     let noteText = results.length > maxDisplay ? 
-        `<p style="color: #666;">(Showing first ${maxDisplay.toLocaleString()} results out of ${results.length.toLocaleString()} total matches)</p>` : '';
+        `<p style="color: #666;">(Only first ${maxDisplay.toLocaleString()} results out of ${results.length.toLocaleString()} total matches are shown)</p>` : '';
     
     let tableHTML = `
         <h2>Results (${results.length.toLocaleString()} matches found)</h2>
