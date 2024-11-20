@@ -40,16 +40,15 @@
         }
 
         .subsequences-and-ions {
-            display: flex;
-            align-items: flex-start;
+            display: grid;
+            grid-template-columns: 1fr auto;
             gap: 50px;
-            max-width: fit-content;
+            width: 100%;
+            align-items: start;
         }
 
         .subsequences-section {
-            display: flex;
-            gap: 10px;
-            align-items: flex-start;
+            justify-content: center;
         }
 
         .subsequences-container {
@@ -59,8 +58,7 @@
         }
 
         .ion-dropdowns {
-            display: flex;
-            gap: 20px;
+            justify-self: end;
         }
         .subsequences-section {
             margin-top: 24px; /* This adds space at the top to align with ion labels */
