@@ -6,97 +6,96 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subsequence and Ion Input</title>
        <style>
-        body {
-            max-width: none !important;
-            width: 100% !important;
-            margin: 0 !important;
-            padding: 20px !important;
-            box-sizing: border-box;
-        }
-    
-        .container {
-            width: 100% !important;
-            display: flex;
-            justify-content: center;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-    
-        #results {
-            width: 100% !important;
-            margin: 20px 0;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            overflow-x: auto;
-            box-sizing: border-box;
-        }
-    
-        .subsequences-and-ions {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: flex-start;
-            gap: 20px;
-            width: 100%;
-        }
-
-        .subsequences-section {
-            display: flex;
-            gap: 10px;
-            align-items: flex-start;
-            flex: 1;
-            min-width: 200px;
-        }
-
-        .subsequences-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: 100%;
-        }
-
-        .ion-dropdowns {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .subsequences-container input {
-            width: 100%;
-            max-width: 300px;
-        }
-
-        table {
-            min-width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-            white-space: nowrap;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        @media (max-width: 768px) {
+            body {
+                max-width: none !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 20px !important;
+                box-sizing: border-box;
+            }
+        
+            .container {
+                width: 100% !important;
+                display: flex;
+                justify-content: center;
+                margin: 0;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+        
+            #results {
+                width: 100% !important;
+                margin: 20px 0;
+                padding: 20px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                overflow-x: auto;
+                box-sizing: border-box;
+            }
+        
             .subsequences-and-ions {
+                display: flex;
                 flex-direction: column;
+                align-items: center;
+                gap: 20px;
+                width: 100%;
+                max-width: 800px;
             }
-
+    
+            .subsequences-section {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+            }
+    
+            .subsequences-container {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+                max-width: 300px;
+            }
+    
             .ion-dropdowns {
+                display: flex;
+                gap: 20px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+    
+            .subsequences-container input {
                 width: 100%;
             }
-
-            select {
-                width: 100%;
+    
+            table {
+                min-width: 100%;
+                border-collapse: collapse;
             }
-        }
-    </style>
+    
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+                white-space: nowrap;
+            }
+    
+            th {
+                background-color: #f2f2f2;
+            }
+    
+            @media (max-width: 768px) {
+                .ion-dropdowns {
+                    width: 100%;
+                    justify-content: center;
+                }
+    
+                select {
+                    width: auto;
+                }
+            }
+        </style>
 </head>
 <body>
     <h1 style="text-align: center;">Enter Search Parameters</h1>
