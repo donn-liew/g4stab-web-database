@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subsequence and Ion Input</title>
     <style>
-    <style>
         html, body {
             max-width: 100%;
             overflow-x: hidden;
@@ -38,13 +37,13 @@
         }
 
         .subsequences-and-ions {
-            display: grid;
-            grid-template-columns: 75% 25%;
+            display: flex;
+            align-items: flex-start;
             width: 100%;
-            align-items: start;
         }
 
         .subsequences-section {
+            width: 75%;
             display: flex;
             gap: 10px;
             align-items: flex-start;
@@ -64,10 +63,10 @@
         }
 
         .ion-dropdowns {
+            width: 25%;
             display: flex;
             gap: 20px;
-            justify-content: flex-end;
-            padding-right: 20px;
+            margin-top: 24px;
         }
 
         .ion-dropdown {
@@ -79,36 +78,68 @@
         .ion-dropdown label {
             margin-bottom: 5px;
         }
+
+        table {
+            min-width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            background: #f8f9fa;
+            border-top: none;
+            box-shadow: inset 0 1px 0 #ddd, inset 0 -1px 0 #ddd;
+            z-index: 1;
+        }
+
+        tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        td {
+            background: white;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+    
+        #loading {
+            text-align: center;
+            margin: 20px;
+        }
+    
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         @media (max-width: 768px) {
             .subsequences-and-ions {
-                grid-template-columns: 1fr;
-                gap: 20px;
+                flex-direction: column;
+                align-items: center;
             }
 
+            .subsequences-section,
             .ion-dropdowns {
+                width: 100%;
                 justify-content: center;
-                padding-right: 0;
             }
         }
-            .loading-spinner {
-        width: 40px;
-        height: 40px;
-        border: 4px solid #f3f3f3;
-        border-top: 4px solid #3498db;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin: 20px auto;
-    }
-    
-    #loading {
-        text-align: center;
-        margin: 20px;
-    }
-    
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
     </style>
 </head>
 <body>
