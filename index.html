@@ -193,7 +193,18 @@
                 }
                 // Get direct download link and fetch data
                 const downloadUrl = getOneDriveDirectLink(shareLink);
-                const response = await fetch(downloadUrl);
+                console.log('Trying to fetch:', downloadUrl); // For debugging
+                
+                const response = await fetch(downloadUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'text/csv,application/vnd.ms-excel'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 if (!response.ok) throw new Error('Failed to load file');
 
                 // Fetch and parse CSV
