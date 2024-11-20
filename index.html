@@ -109,10 +109,11 @@
 
     // Function to convert OneDrive share link to direct download link
     function getOneDriveDirectLink(shareLink) {
+        // Convert SharePoint link to direct download
         return shareLink
-            .replace('view.aspx', 'download.aspx')
-            .replace('redir', 'download')
-            .replace('?share=', '/download?');
+            .replace('?e=', '?download=1&e=')
+            .replace(':x:', ':u:')  // This is important for SharePoint links
+            .replace('/:x:/g/', '/:u:/g/');
     }
     </script>
     <h1 style="text-align: center;">Enter Search Parameters</h1>
