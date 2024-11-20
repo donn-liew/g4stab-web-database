@@ -232,12 +232,15 @@ function displayResults(headers, results) {
         return;
     }
 
+    // Skip the first column (index) and get actual data columns
+    const dataHeaders = headers.slice(1);  // Skip ',' or '0' column
+    
     let tableHTML = `
         <h2>Results (${results.length} matches found)</h2>
         <table>
             <thead>
                 <tr>
-                    ${headers.slice(1).map(header => `<th>${header}</th>`).join('')}
+                    ${dataHeaders.map(header => `<th>${header}</th>`).join('')}
                 </tr>
             </thead>
             <tbody>
@@ -249,7 +252,6 @@ function displayResults(headers, results) {
             </tbody>
         </table>
     `;
-
     resultsDiv.innerHTML = tableHTML;
 }
     </script>
