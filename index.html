@@ -255,7 +255,7 @@ function addNewSubsequence() {
 }
 
 async function searchSequences() {
-        try {
+    try {
         const k = document.getElementById('k').value;
         const na = document.getElementById('na').value;
         const li_nh4 = document.getElementById('li_nh4').value;
@@ -270,19 +270,15 @@ async function searchSequences() {
                 `<p style="color: red;">Error: Please select concentrations for: ${missingIons.join(', ')}</p>`;
             return;
         }
-    try {
+
         if (!globalData) {
             await loadInitialData();
         }
-
+        
         const subsequenceInputs = document.querySelectorAll('input[name="subsequence"]');
         const subsequences = Array.from(subsequenceInputs)
             .map(input => input.value)
             .filter(value => value.trim() !== '');
-
-        const k = document.getElementById('k').value;
-        const na = document.getElementById('na').value;
-        const li_nh4 = document.getElementById('li_nh4').value;
 
         const sequenceIdx = globalData.headers.indexOf('sequence');
         const kIdx = globalData.headers.indexOf('k');
