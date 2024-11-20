@@ -1,360 +1,306 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sakura.css/css/sakura.css" type="text/css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subsequence and Ion Input</title>
+    <title>Sequence Search</title>
     <style>
-        html, body {
-            max-width: 100%;
-            overflow-x: hidden;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            height: 100vh;
-        }
-
         body {
-            padding: 20px !important;
-        }
-    
-        .container {
-            width: 100% !important;
-            margin: 0;
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
-            box-sizing: border-box;
-        }
-    
-        #results {
-            width: 100% !important;
-            margin: 20px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            overflow: auto;
-            height: calc(100vh - 200px);
-            box-sizing: border-box;
         }
 
-         .subsequences-and-ions {
-            display: flex;
-            align-items: flex-start;
-            width: 100%;
-        }
-        
-        .subsequences-section {
-            width: 75%;
-            display: flex;
-            flex-direction: column;  /* For vertical stacking of title and input area */
-            align-items: center;     
-            margin-top: 44px;
-        }
-        
-        .subsequences-section {
-            width: 75%;
+        .search-container {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 40px;
+            margin: 40px 0;
         }
-        
-        .subsequences-container {
+
+        .input-group {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            width: 400px;
-        }
-        
-        .ion-dropdowns {
-            width: 25%;
-            display: flex;
             gap: 20px;
         }
 
-        .ion-dropdown {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
+        .input-group h3 {
+            margin: 0;
+            text-align: center;
         }
 
-        .ion-dropdown label {
-            margin-bottom: 5px;
+        .subsequence-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .salt-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input, select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 200px;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #results {
+            margin-top: 40px;
+            overflow-x: auto;
         }
 
         table {
-            min-width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
+            width: 100%;
+            border-collapse: collapse;
         }
 
         th, td {
-            padding: 12px 15px;
+            padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
 
-        thead th {
+        th {
+            background-color: #f8f9fa;
             position: sticky;
             top: 0;
-            background: #f8f9fa;
-            border-top: none;
-            box-shadow: inset 0 1px 0 #ddd, inset 0 -1px 0 #ddd;
-            z-index: 1;
         }
 
-        tbody tr:hover {
-            background-color: #f5f5f5;
-        }
-
-        td {
-            background: white;
-        }
-
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-    
-        #loading {
+        .loading {
             text-align: center;
             margin: 20px;
         }
-    
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
-        @media (max-width: 768px) {
-            .subsequences-and-ions {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .subsequences-section,
-            .ion-dropdowns {
-                width: 100%;
-                justify-content: center;
-            }
-        }
     </style>
 </head>
 <body>
-    <h1 style="text-align: center;">Enter Search Parameters</h1>
-    
-<div class="container">
-    <div class="subsequences-and-ions">
-        <div class="subsequences-section">
-            <div class="subsequences-container" id="subsequences">
-                <input type="text" name="subsequence" placeholder="Enter subsequence">
+    <h1 style="text-align: center;">Sequence Search</h1>
+
+    <div class="search-container">
+        <div class="input-group">
+            <h3>Subsequences</h3>
+            <div class="subsequence-inputs" id="subsequences">
+                <input type="text" placeholder="Enter subsequence">
             </div>
-            <button type="button" onclick="addNewSubsequence()">+</button>
+            <button onclick="addSubsequence()">Add Subsequence</button>
         </div>
-        <div class="ion-dropdowns">
-            <select id="k" name="k">
-                <option value="">K+</option>
-                <option value="0">0 mM</option>
-                <option value="50">50 mM</option>
-                <option value="100">100 mM</option>
-                <option value="150">150 mM</option>
-            </select>
-            <select id="na" name="na">
-                <option value="">Na+</option>
-                <option value="0">0 mM</option>
-                <option value="50">50 mM</option>
-                <option value="100">100 mM</option>
-                <option value="150">150 mM</option>
-            </select>
-            <select id="li_nh4" name="li_nh4">
-                <option value="">Li+/NH4+</option>
-                <option value="0">0 mM</option>
-                <option value="50">50 mM</option>
-                <option value="100">100 mM</option>
-                <option value="150">150 mM</option>
-            </select>
+
+        <div class="input-group">
+            <h3>Salt Concentrations</h3>
+            <div class="salt-inputs">
+                <select id="k">
+                    <option value="">Select K+ (mM)</option>
+                    <option value="0">0</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="150">150</option>
+                </select>
+                <select id="na">
+                    <option value="">Select Na+ (mM)</option>
+                    <option value="0">0</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="150">150</option>
+                </select>
+                <select id="li_nh4">
+                    <option value="">Select Li+/NH4+ (mM)</option>
+                    <option value="0">0</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="150">150</option>
+                </select>
+            </div>
         </div>
     </div>
-</div>
-    
-    <style>
-    .ion-dropdowns {
-        display: flex;
-        gap: 20px;
-    }
-    
-    .ion-dropdown {
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .ion-dropdown label {
-        margin-bottom: 5px;
-    }
-    </style>
 
     <div style="text-align: center;">
         <button onclick="searchSequences()">Search</button>
     </div>
-    
-    <div id="loading" style="display: none;">
-    <div class="loading-spinner"></div>
-    <div>Loading data... <span id="progress">0/0</span> files</div>
+
+    <div id="loading" class="loading" style="display: none;">
+        <div class="spinner"></div>
+        <div>Loading data... <span id="progress">0/0</span> files</div>
     </div>
+
     <div id="results"></div>
 
     <script>
-let globalData = null;
-let isLoading = false;
+        let globalData = null;
+        let isLoading = false;
 
-async function loadInitialData() {
-    if (isLoading || globalData) return;
-    
-    isLoading = true;
-    const loadingDiv = document.getElementById('loading');
-    const progressSpan = document.getElementById('progress');
-    loadingDiv.style.display = 'block';
+        function addSubsequence() {
+            const container = document.getElementById('subsequences');
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.placeholder = 'Enter subsequence';
+            container.appendChild(input);
+        }
 
-    try {
-        // Change 20 to match your number of files (e.g., 5 for 5 files, 100 for 100 files)
-        // const files = [...Array(20)].map((_, i) => `file${i + 1}.csv`);
-        const files = ['test1.csv', 'test.csv'];  // Your current files
-        const baseUrl = 'https://donn-liew.github.io/my-test-static-page/data/';
-        
-        progressSpan.textContent = `0/${files.length}`;
-        
-        let allData = [];
-        let headers = null;
-        
-        for(let i = 0; i < files.length; i++) {
-            const response = await fetch(baseUrl + files[i]);
-            const csvText = await response.text();
-            const rows = csvText.split('\n').map(row => row.split(','));
+        async function loadInitialData() {
+            if (isLoading || globalData) return;
             
-            if (!headers) {
-                headers = rows[0];
+            isLoading = true;
+            const loadingDiv = document.getElementById('loading');
+            const progressSpan = document.getElementById('progress');
+            loadingDiv.style.display = 'block';
+
+            try {
+                const files = ['test1.csv', 'test.csv'];
+                const baseUrl = 'https://donn-liew.github.io/my-test-static-page/data/';
+                
+                progressSpan.textContent = `0/${files.length}`;
+                
+                let allData = [];
+                let headers = null;
+                
+                for(let i = 0; i < files.length; i++) {
+                    const response = await fetch(baseUrl + files[i]);
+                    const csvText = await response.text();
+                    const rows = csvText.split('\n').map(row => row.split(','));
+                    
+                    if (!headers) {
+                        headers = rows[0];
+                    }
+                    
+                    allData.push(...rows.slice(1));
+                    progressSpan.textContent = `${i + 1}/${files.length}`;
+                }
+
+                globalData = {
+                    headers: headers,
+                    data: allData
+                };
+                
+                loadingDiv.style.display = 'none';
+            } catch (error) {
+                console.error('Error loading data:', error);
+                loadingDiv.innerHTML = 'Error loading data. Please refresh the page.';
+            } finally {
+                isLoading = false;
             }
-            
-            allData.push(...rows.slice(1));
-            progressSpan.textContent = `${i + 1}/${files.length}`;
         }
 
-        globalData = {
-            headers: headers,
-            data: allData
-        };
-        
-        loadingDiv.style.display = 'none';
-    } catch (error) {
-        console.error('Error loading data:', error);
-        loadingDiv.innerHTML = 'Error loading data. Please refresh the page.';
-    } finally {
-        isLoading = false;
-    }
-}
+        async function searchSequences() {
+            try {
+                const k = document.getElementById('k').value;
+                const na = document.getElementById('na').value;
+                const li_nh4 = document.getElementById('li_nh4').value;
 
-function addNewSubsequence() {
-    const container = document.getElementById('subsequences');
-    const newInput = document.createElement('input');
-    newInput.type = 'text';
-    newInput.name = 'subsequence';
-    newInput.placeholder = 'Enter subsequence';
-    container.appendChild(newInput);
-}
+                if (!k || !na || !li_nh4) {
+                    let missingIons = [];
+                    if (!k) missingIons.push('K+');
+                    if (!na) missingIons.push('Na+');
+                    if (!li_nh4) missingIons.push('Li+/NH4+');
+                    
+                    document.getElementById('results').innerHTML = 
+                        `<p style="color: red;">Please select concentrations for: ${missingIons.join(', ')}</p>`;
+                    return;
+                }
 
-async function searchSequences() {
-    try {
-        const k = document.getElementById('k').value;
-        const na = document.getElementById('na').value;
-        const li_nh4 = document.getElementById('li_nh4').value;
+                if (!globalData) {
+                    await loadInitialData();
+                }
+                
+                const subsequenceInputs = document.querySelectorAll('#subsequences input');
+                const subsequences = Array.from(subsequenceInputs)
+                    .map(input => input.value)
+                    .filter(value => value.trim() !== '');
 
-        if (!k || !na || !li_nh4) {
-            let missingIons = [];
-            if (!k) missingIons.push('K+');
-            if (!na) missingIons.push('Na+');
-            if (!li_nh4) missingIons.push('Li+/NH4+');
-            
-            document.getElementById('results').innerHTML = 
-                `<p style="color: red;">Error: Please select concentrations for: ${missingIons.join(', ')}</p>`;
-            return;
+                const sequenceIdx = globalData.headers.indexOf('sequence');
+                const kIdx = globalData.headers.indexOf('k');
+                const naIdx = globalData.headers.indexOf('na');
+                const liNh4Idx = globalData.headers.indexOf('li/nh4');
+
+                const results = globalData.data.filter(row => {
+                    const sequence = row[sequenceIdx];
+                    
+                    const sequenceMatch = subsequences.length === 0 || 
+                        subsequences.every(subseq => sequence && subseq && sequence.includes(subseq));
+                    
+                    const kMatch = !k || row[kIdx] === k;
+                    const naMatch = !na || row[naIdx] === na;
+                    const liNh4Match = !li_nh4 || row[liNh4Idx] === li_nh4;
+
+                    return sequenceMatch && kMatch && naMatch && liNh4Match;
+                });
+
+                displayResults(globalData.headers, results);
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('results').innerHTML = 
+                    `<p style="color: red;">Error searching data: ${error.message}</p>`;
+            }
         }
 
-        if (!globalData) {
-            await loadInitialData();
+        function displayResults(headers, results) {
+            const resultsDiv = document.getElementById('results');
+            
+            if (results.length === 0) {
+                resultsDiv.innerHTML = '<p>No matches found.</p>';
+                return;
+            }
+
+            const dataHeaders = headers.slice(1);
+            const maxDisplay = 10000;
+            const displayResults = results.slice(0, maxDisplay);
+            
+            let noteText = results.length > maxDisplay ? 
+                `<p style="color: #666;">(Showing first ${maxDisplay.toLocaleString()} results)</p>` : '';
+            
+            let tableHTML = `
+                <h2>Results (${results.length.toLocaleString()} matches)</h2>
+                ${noteText}
+                <table>
+                    <thead>
+                        <tr>
+                            ${dataHeaders.map(header => `<th>${header}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${displayResults.map(row => `
+                            <tr>
+                                ${row.slice(1).map(cell => `<td>${cell}</td>`).join('')}
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            resultsDiv.innerHTML = tableHTML;
         }
-        
-        const subsequenceInputs = document.querySelectorAll('input[name="subsequence"]');
-        const subsequences = Array.from(subsequenceInputs)
-            .map(input => input.value)
-            .filter(value => value.trim() !== '');
 
-        const sequenceIdx = globalData.headers.indexOf('sequence');
-        const kIdx = globalData.headers.indexOf('k');
-        const naIdx = globalData.headers.indexOf('na');
-        const liNh4Idx = globalData.headers.indexOf('li/nh4');
-
-        const results = globalData.data.filter(row => {
-            const sequence = row[sequenceIdx];
-            
-            const sequenceMatch = subsequences.length === 0 || 
-                subsequences.every(subseq => sequence && subseq && sequence.includes(subseq));
-            
-            const kMatch = !k || row[kIdx] === k;
-            const naMatch = !na || row[naIdx] === na;
-            const liNh4Match = !li_nh4 || row[liNh4Idx] === li_nh4;
-
-            return sequenceMatch && kMatch && naMatch && liNh4Match;
-        });
-
-        displayResults(globalData.headers, results);
-    } catch (error) {
-        console.error('Error:', error);
-        document.getElementById('results').innerHTML = 
-            `<p style="color: red;">Error searching data: ${error.message}</p>`;
-    }
-}
-
-function displayResults(headers, results) {
-    const resultsDiv = document.getElementById('results');
-    
-    if (results.length === 0) {
-        resultsDiv.innerHTML = '<p>No matches found.</p>';
-        return;
-    }
-
-    const dataHeaders = headers.slice(1);
-    const maxDisplay = 10000;
-    const displayResults = results.slice(0, maxDisplay);
-    
-    let noteText = results.length > maxDisplay ? 
-        `<p style="color: #666;">(Only first ${maxDisplay.toLocaleString()} results are shown)</p>` : '';
-    
-    let tableHTML = `
-        <h2>Results (${results.length.toLocaleString()} matches found)</h2>
-        ${noteText}
-        <table>
-            <thead>
-                <tr>
-                    ${dataHeaders.map(header => `<th>${header}</th>`).join('')}
-                </tr>
-            </thead>
-            <tbody>
-                ${displayResults.map(row => `
-                    <tr>
-                        ${row.slice(1).map(cell => `<td>${cell}</td>`).join('')}
-                    </tr>
-                `).join('')}
-            </tbody>
-        </table>
-    `;
-    resultsDiv.innerHTML = tableHTML;
-}
-
-// Add this line at the end to load data when page loads
-document.addEventListener('DOMContentLoaded', loadInitialData);
+        document.addEventListener('DOMContentLoaded', loadInitialData);
     </script>
 </body>
 </html>
