@@ -45,17 +45,16 @@
         .subsequences-section {
             width: 75%;
             display: flex;
-            flex-direction: column;  /* Add this to stack label and input vertically */
-            align-items: center;     /* Add this to center both label and input */
-            gap: 10px;
-            margin-top: 44px;       /* To align with dropdowns */
+            flex-direction: column;  /* For vertical stacking of title and input area */
+            align-items: center;     
+            margin-top: 44px;
         }
         
         .subsequences-container {
-            display: flex;
-            flex-direction: column;
+            display: flex;          /* This will now be row direction */
+            align-items: flex-start; /* Align items at the top */
             gap: 10px;
-            width: 400px;           /* Your desired width */
+            width: 400px;
         }
         
         .subsequences-container input {
@@ -146,16 +145,16 @@
 <body>
     <h1 style="text-align: center;">Enter Search Parameters</h1>
     
-    <div class="container">
-            <div class="subsequences-and-ions">
-                <div class="subsequences-section">
-                    <div class="subsequences-container" id="subsequences">
-                        <input type="text" name="subsequence" placeholder="Enter subsequence">
-                    </div>
-                    <button type="button" onclick="addNewSubsequence()">+</button>
-                </div>
-            <div class="ion-dropdowns">
-                <div class="ion-dropdown">
+<div class="container">
+    <div class="subsequences-and-ions">
+        <div class="subsequences-section">
+            <div class="subsequences-container" id="subsequences">
+                <input type="text" name="subsequence" placeholder="Enter subsequence">
+            </div>
+            <button type="button" onclick="addNewSubsequence()">+</button>
+        </div>
+        <div class="ion-dropdowns">
+            <div class="ion-dropdown">
                     <label for="k">K+</label>
                     <select id="k" name="k">
                         <option value="">Select</option>
