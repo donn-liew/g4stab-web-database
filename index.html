@@ -255,6 +255,21 @@ function addNewSubsequence() {
 }
 
 async function searchSequences() {
+        try {
+        const k = document.getElementById('k').value;
+        const na = document.getElementById('na').value;
+        const li_nh4 = document.getElementById('li_nh4').value;
+
+        if (!k || !na || !li_nh4) {
+            let missingIons = [];
+            if (!k) missingIons.push('K+');
+            if (!na) missingIons.push('Na+');
+            if (!li_nh4) missingIons.push('Li+/NH4+');
+            
+            document.getElementById('results').innerHTML = 
+                `<p style="color: red;">Error: Please select concentrations for: ${missingIons.join(', ')}</p>`;
+            return;
+        }
     try {
         if (!globalData) {
             await loadInitialData();
