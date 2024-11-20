@@ -186,6 +186,8 @@ async function loadInitialData() {
     loadingDiv.style.display = 'block';
 
     try {
+        // Change 20 to match your number of files (e.g., 5 for 5 files, 100 for 100 files)
+        // const files = [...Array(20)].map((_, i) => `file${i + 1}.csv`);
         const files = ['test1.csv', 'test.csv'];  // Your current files
         const baseUrl = 'https://donn-liew.github.io/my-test-static-page/data/';
         
