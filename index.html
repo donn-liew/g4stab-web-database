@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subsequence and Ion Input</title>
     <style>
+    <style>
         html, body {
             max-width: 100%;
             overflow-x: hidden;
@@ -21,8 +22,6 @@
     
         .container {
             width: 100% !important;
-            display: flex;
-            justify-content: center;
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
@@ -34,46 +33,54 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             overflow: auto;
-            /* Calculate height: 100vh (full viewport) - header space - padding - margins */
-            height: calc(100vh - 200px); /* Adjust the 200px based on your header size */
+            height: calc(100vh - 200px);
             box-sizing: border-box;
         }
 
         .subsequences-and-ions {
-            display: grid;
-            grid-template-columns: 1fr auto;
+            display: flex;
+            justify-content: center;
             gap: 50px;
             width: 100%;
             align-items: start;
+            position: relative;
         }
 
         .subsequences-section {
-            justify-content: center;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            margin-top: 24px;
+            width: auto;
         }
 
         .subsequences-container {
             display: flex;
             flex-direction: column;
             gap: 10px;
+            width: 200px; /* Fixed width for subsequence inputs */
+        }
+
+        .subsequences-container input {
+            width: 100%;
         }
 
         .ion-dropdowns {
-            justify-self: end;
-        }
-        .subsequences-section {
-            margin-top: 24px; /* This adds space at the top to align with ion labels */
+            display: flex;
+            gap: 20px;
+            position: absolute;
+            right: 0;
         }
 
-/* Adjust the ion dropdowns spacing */
-.ion-dropdown {
-    display: flex;
-    flex-direction: column;
-    gap: 5px; /* Consistent spacing between label and dropdown */
-}
+        .ion-dropdown {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
 
-.ion-dropdown label {
-    margin-bottom: 5px;
-}
+        .ion-dropdown label {
+            margin-bottom: 5px;
+        }
         table {
             min-width: 100%;
             border-collapse: separate;
