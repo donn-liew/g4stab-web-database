@@ -357,8 +357,8 @@
                             <tr>
                             ${dataHeaders.map(header => {
                                 // For the 'k' column, use LaTeX notation
-                                if (header === 'k') {
-                                    return `<th>K⁺</th>`;
+                                    if (header === 'k') {
+                                    return `<th>K<sup>+</sup></th>`;
                                 }
                                 // Leave other columns as they are
                                 return `<th>${header}</th>`;
@@ -376,11 +376,10 @@
                 </div>
             `;
             resultsDiv.innerHTML = tableHTML;
-            if (window.MathJax) {
-            MathJax.typeset();
+            
         }
-
-        document.addEventListener('DOMContentLoaded', loadInitialData);
+    }
+    document.addEventListener('DOMContentLoaded', loadInitialData);
     </script>
 </body>
 </html>
