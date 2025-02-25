@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sequence Search</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sakura.css/1.4.1/sakura.css">
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         body {
             max-width: 100% !important;
@@ -354,7 +355,14 @@
                     <table>
                         <thead>
                             <tr>
-                                ${dataHeaders.map(header => `<th>${header}</th>`).join('')}
+                            ${dataHeaders.map(header => {
+                                // For the 'k' column, use LaTeX notation
+                                if (header === 'k') {
+                                    return `<th>\\(K^{+}\\)</th>`;
+                                }
+                                // Leave other columns as they are
+                                return `<th>${header}</th>`;
+                            }).join('')}
                             </tr>
                         </thead>
                         <tbody>
