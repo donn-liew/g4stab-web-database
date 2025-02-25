@@ -376,6 +376,8 @@
                 </div>
             `;
             resultsDiv.innerHTML = tableHTML;
+            if (window.MathJax) {
+            MathJax.typeset();
         }
 
         document.addEventListener('DOMContentLoaded', loadInitialData);
