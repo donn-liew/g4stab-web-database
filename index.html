@@ -356,11 +356,13 @@
                         <thead>
                             <tr>
                             ${dataHeaders.map(header => {
-                                // For the 'k' column, use LaTeX notation
                                     if (header === 'k') {
                                     return `<th>K<sup>+</sup></th>`;
+                                } else if (header == 'na') {
+                                    return `<th>Na<sup>+</sup></th>`;
+                                }  else if (header === 'li/nh4') {
+                                    return `<th>Li<sup>+</sup>/NH<sub>4</sub><sup>+</sup></th>`;
                                 }
-                                // Leave other columns as they are
                                 return `<th>${header}</th>`;
                             }).join('')}
                             </tr>
