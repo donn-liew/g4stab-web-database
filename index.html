@@ -187,33 +187,33 @@
         </div>
 
         <div class="input-group">
-            <h3>Salt Concentrations</h3>
+           <h3>Salt Concentrations</h3>
             <div class="salt-inputs">
-                <select id="k">
-                    <option value="">Select K<sup>+</sup> (mM)</option>
-                    <option value="0">0 (mM) K<sup>+</sup></option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                    <option value="150">150</option>
-                </select>
-                <select id="na">
-                    <option value="">Select Na+ (mM)</option>
-                    <option value="0">0</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                    <option value="150">150</option>
-                </select>
-                <select id="li_nh4">
-                    <option value="">Select Li+/NH4+ (mM)</option>
-                    <option value="0">0</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                    <option value="150">150</option>
+                <select id="combined-salt">
+                    <option value="">Select Salt Concentration</option>
+                    <optgroup label="K+ (mM)">
+                        <option value="k-0">0 mM K+</option>
+                        <option value="k-50">50 mM K+</option>
+                        <option value="k-100">100 mM K+</option>
+                        <option value="k-150">150 mM K+</option>
+                    </optgroup>
+                    <optgroup label="Na+ (mM)">
+                        <option value="na-0">0 mM Na+</option>
+                        <option value="na-50">50 mM Na+</option>
+                        <option value="na-100">100 mM Na+</option>
+                        <option value="na-150">150 mM Na+</option>
+                    </optgroup>
+                    <optgroup label="Li+/NH4+ (mM)">
+                        <option value="li-0">0 mM Li+/NH4+</option>
+                        <option value="li-50">50 mM Li+/NH4+</option>
+                        <option value="li-100">100 mM Li+/NH4+</option>
+                        <option value="li-150">150 mM Li+/NH4+</option>
+                    </optgroup>
                 </select>
             </div>
         </div>
     </div>
-
+    
     <div style="text-align: center;">
         <button onclick="searchSequences()">Search</button>
     </div>
