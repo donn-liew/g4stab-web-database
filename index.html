@@ -267,7 +267,7 @@
             }
         }
 
-            async function searchSequences() {
+          async function searchSequences() {
                 try {
                     const combinedSaltValue = document.getElementById('combined-salt').value;
                     
@@ -280,45 +280,40 @@
                     // Parse the combined value (format: "k-na-li_nh4")
                     const [k, na, li_nh4] = combinedSaltValue.split('-');
                     
+                    if (!globalData) {
+                        await loadInitialData();
+                    }
+                    
+                    const subsequenceInputs = document.querySelectorAll('#subsequences input');
+                    const subsequences = Array.from(subsequenceInputs)
+                        .map(input => input.value)
+                        .filter(value => value.trim() !== '');
+            
+                    const sequenceIdx = globalData.headers.indexOf('sequence');
+                    const kIdx = globalData.headers.indexOf('k');
+                    const naIdx = globalData.headers.indexOf('na');
+                    const liNh4Idx = globalData.headers.indexOf('li/nh4');
+            
+                    const results = globalData.data.filter(row => {
+                        const sequence = row[sequenceIdx];
+                        
+                        const sequenceMatch = subsequences.length === 0 || 
+                            subsequences.every(subseq => sequence && subseq && sequence.includes(subseq));
+                        
+                        const kMatch = !k || row[kIdx] === k;
+                        const naMatch = !na || row[naIdx] === na;
+                        const liNh4Match = !li_nh4 || row[liNh4Idx] === li_nh4;
+            
+                        return sequenceMatch && kMatch && naMatch && liNh4Match;
+                    });
+            
+                    displayResults(globalData.headers, results);
+                } catch (error) {
+                    console.error('Error:', error);
                     document.getElementById('results').innerHTML = 
-                        `<p style="color: red;">Please select concentrations for: ${missingIons.join(', ')}</p>`;
-                    return;
+                        `<p style="color: red;">Error searching data: ${error.message}</p>`;
                 }
-
-                if (!globalData) {
-                    await loadInitialData();
-                }
-                
-                const subsequenceInputs = document.querySelectorAll('#subsequences input');
-                const subsequences = Array.from(subsequenceInputs)
-                    .map(input => input.value)
-                    .filter(value => value.trim() !== '');
-
-                const sequenceIdx = globalData.headers.indexOf('sequence');
-                const kIdx = globalData.headers.indexOf('k');
-                const naIdx = globalData.headers.indexOf('na');
-                const liNh4Idx = globalData.headers.indexOf('li/nh4');
-
-                const results = globalData.data.filter(row => {
-                    const sequence = row[sequenceIdx];
-                    
-                    const sequenceMatch = subsequences.length === 0 || 
-                        subsequences.every(subseq => sequence && subseq && sequence.includes(subseq));
-                    
-                    const kMatch = !k || row[kIdx] === k;
-                    const naMatch = !na || row[naIdx] === na;
-                    const liNh4Match = !li_nh4 || row[liNh4Idx] === li_nh4;
-
-                    return sequenceMatch && kMatch && naMatch && liNh4Match;
-                });
-
-                displayResults(globalData.headers, results);
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('results').innerHTML = 
-                    `<p style="color: red;">Error searching data: ${error.message}</p>`;
             }
-        }
 
         function displayResults(headers, results) {
             const resultsDiv = document.getElementById('results');
