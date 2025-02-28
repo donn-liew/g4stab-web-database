@@ -35,6 +35,30 @@
             margin-bottom: 12px;
             color: #2c8898; /* Keep the color consistent with your theme */
         }
+      .instructions-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 30px;
+      }
+      
+      .instructions-content {
+        flex: 0 0 60%; /* Takes approximately 60% of the width */
+      }
+      
+      .instructions-image {
+        flex: 0 0 35%; /* Takes approximately 35% of the width */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: 20px; /* Aligns vertically with the instructions */
+      }
+  
+      .instructions-image img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+      }
 
         .search-container {
             display: flex;
@@ -145,6 +169,20 @@
             margin: 20px auto;
         }
 
+      @media (max-width: 768px) {
+            .instructions-container {
+              flex-direction: column;
+            }
+            
+            .instructions-content, .instructions-image {
+              flex: 1 1 100%;
+            }
+            
+            .instructions-image {
+              margin-top: 20px;
+            }
+          }
+                
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -194,30 +232,34 @@
             <div class="instructions-section">
               <h2>How to Use This Tool</h2>
   
-                  <dl class="steps-list">
-                    <dt>1. Subsequence Search</dt>
-                    <dd>a) Enter one or more DNA subsequences to find G4 structures</dd>
-                    <dd>b) When multiple subsequences are entered, 
-                        the search will return only sequences containing ALL entered subsequences</dd>
-                    <dd>c) Leave empty to view stability predictions for all sequences</dd>
-    
-                    <dt>2. Select Ionic Condition</dt>
-                    <dd>Choose one of the four ionic conditions from the dropdown menu</dd>
-                    <dd>Each selection will display stability predictions optimized for that specific ionic environment</dd>
-    
-                    <dt>3. Search</dt>
-                    <dd>Click the "Search" button to view stability predictions</dd>
-                    <dd>Results will show predicted melting temperatures from our deep learning model</dd>
-                  </dl>
-                </div>
+                <div class="instructions-container">
+          <div class="instructions-content">
+            <dl class="steps-list">
+              <dt>1. Subsequence Search</dt>
+              <dd>a) Enter one or more DNA subsequences to find G4 structures</dd>
+              <dd>b) When multiple subsequences are entered, 
+                  the search will return only sequences containing ALL entered subsequences</dd>
+              <dd>c) Leave empty to view stability predictions for all sequences</dd>
+        
+              <dt>2. Select Ionic Condition</dt>
+              <dd>Choose one of the four ionic conditions from the dropdown menu</dd>
+              <dd>Each selection will display stability predictions optimized for that specific ionic environment</dd>
+        
+              <dt>3. Search</dt>
+              <dd>Click the "Search" button to view stability predictions</dd>
+              <dd>Results will show predicted melting temperatures from our deep learning model</dd>
+            </dl>
+          </div>
+          
+          <div class="instructions-image">
+            <img src="g4_graphics.png" alt="G4 structure illustration" width="200">
+          </div>
+        </div>
             <div class="citation-box">
                 <p>If you found this tool useful, please cite: <span class="citation">some-reference-here</span></p>
             </div>
         </div>
     <div class="search-container-wrapper">
-        <div class="flanking-image left-image">
-            <img src="left_pic.png" alt="Left image" width="200">
-        </div>
     <div class="search-container">
         <div class="input-group">
             <h3>Subsequences</h3>
@@ -240,9 +282,6 @@
             </div>
         </div>
     </div>
-        <div class="flanking-image right-image">
-            <img src="right_pic.png" alt="Right image" width="200">
-        </div>
 </div>
     
     <div style="text-align: center;">
