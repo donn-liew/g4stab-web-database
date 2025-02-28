@@ -21,6 +21,7 @@
             line-height: 1.6;
             text-align: justify;
         }
+        
         .description-box > p:first-of-type {
             font-size: 1.2em;
             margin-bottom: 25px;
@@ -36,16 +37,17 @@
             margin-bottom: 12px;
             color: #2c8898; /* Keep the color consistent with your theme */
         }
+        
         .instructions-container {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             gap: 30px;
-      }
+        }
       
         .instructions-content {
             flex: 0 0 60%; /* Takes approximately 60% of the width */
-      }
+        }
       
         .instructions-image {
             flex: 0 0 35%; /* Takes approximately 35% of the width */
@@ -53,14 +55,14 @@
             justify-content: center;
             align-items: center;
             padding-top: 60px; /* Aligns vertically with the instructions */
-      }
+        }
   
         .instructions-image img {
             max-width: 100%;
             height: auto;
             border-radius: 8px;
             width: 500px; 
-      }
+        }
 
         .search-container {
             display: flex;
@@ -68,7 +70,7 @@
             gap: 40px;
             margin: 40px 0;
             flex-wrap: wrap;
-    }
+        }
 
         .input-group {
             display: flex;
@@ -231,29 +233,26 @@
                 stability predictions that may help researchers understand how G4 structures behave in 
                 different ionic environments.</p>
             
-            <div class="instructions-section">
-              <h2>How to Use This Tool</h2>
-  
+        <div class="instructions-section">
+          <h2>How to Use This Tool</h2>
+        
         <div class="instructions-container">
           <div class="instructions-content">
             <dl class="steps-list">
               <dt>1. Subsequence Search</dt>
-              <dd>
-                  <ul>
-                  <li>Enter one or more DNA subsequences (A, T, G, C only) to find G4 structures. 
-                          Spaces will be ignored and searches are not case-sensitive</li>
-                  <li>When multiple subsequences are entered, 
-                      the search will return only sequences containing ALL entered subsequences</li>
-                <li>Leave sequence field empty to view stability predictions for all sequences</li>
-              </dd>
-        
-              <dt>2. Select Ionic Condition</dt>
-              <dd>Choose one of the four ionic conditions from the dropdown menu</dd>
-              <dd>Each selection will display stability predictions optimized for that specific ionic environment</dd>
+                <dd>• Enter one or more DNA subsequences (A, T, G, C only) to find G4 structures. 
+                    Spaces will be ignored and searches are not case-sensitive</dd>
+                <dd>• When multiple subsequences are entered, 
+                      the search will return only sequences containing ALL entered subsequences</dd>
+                <dd>• Leave sequence field empty to view stability predictions for all sequences</dd>
+                
+            <dt>2. Select Ionic Condition</dt>
+              <dd>• Choose one of the four ionic conditions from the dropdown menu</dd>
+              <dd>• Each selection will display stability predictions optimized for that specific ionic environment</dd>
         
               <dt>3. Search</dt>
-              <dd>Click the "Search" button to view stability predictions</dd>
-              <dd>Results will show predicted melting temperatures from our deep learning model</dd>
+              <dd>• Click the "Search" button to view stability predictions</dd>
+              <dd>• Results will show predicted melting temperatures from our deep learning model</dd>
             </dl>
           </div>
           
@@ -262,7 +261,7 @@
           </div>
         </div>
             <div class="citation-box">
-                <p>If you found this tool useful, please cite: <span class="citation">some-reference-here</span></p>
+                <p>If you found this tool useful, please cite: <span class="citation"></span></p>
             </div>
         </div>
     <div class="search-container-wrapper">
