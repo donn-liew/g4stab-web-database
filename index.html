@@ -159,6 +159,30 @@
             white-space: nowrap;
         }
 
+                /* Add vertical borders between columns */
+        table th, table td {
+            border-right: 1px solid #ddd; /* Light gray vertical border */
+        }
+
+        /* Add alternating row colors */
+        table tbody tr:nth-child(even) {
+            background-color: #f0f8ff; /* Light blue */
+        }
+        
+        table tbody tr:nth-child(odd) {
+            background-color: #ffffff; /* White */
+        }
+        
+        /* Keep hover effect */
+        table tbody tr:hover {
+            background-color: #e6f2ff; /* Slightly darker blue on hover */
+        }
+
+/* Remove border from last cell in each row to keep it clean */
+table th:last-child, table td:last-child {
+    border-right: none;
+}
+
         tbody tr:hover {
             background-color: #f5f5f5;
         }
