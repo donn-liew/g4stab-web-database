@@ -141,15 +141,17 @@
 
         table th:first-child,
         table td:first-child {
-            width: 35%; /* Make first column (sequence) wider */
+            width: 35%; /* Make sequence column wider */
             min-width: 200px;
+            text-align: left; /* Left-align text in first column */
         }
         
         /* Give equal width to other columns */
         table th:not(:first-child),
         table td:not(:first-child) {
-            width: calc(65% / 6); /* Assuming you have around 6 other columns */
+            width: calc(65% / 6); /* Distribute remaining space */
             min-width: 70px;
+            text-align: center; /* Center numeric values */
         }
         
         /* Ensure content doesn't overflow and break layout */
@@ -157,11 +159,6 @@
             overflow: hidden;
             text-overflow: ellipsis; /* Adds "..." when text is too long */
             white-space: nowrap;
-        }
-
-                /* Add vertical borders between columns */
-        table th, table td {
-            border-right: 1px solid #ddd; /* Light gray vertical border */
         }
 
         /* Add alternating row colors */
@@ -176,6 +173,13 @@
         /* Keep hover effect */
         table tbody tr:hover {
             background-color: #e6f2ff; /* Slightly darker blue on hover */
+        }
+
+        table th {
+            background-color: #f8f9fa;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
 /* Remove border from last cell in each row to keep it clean */
