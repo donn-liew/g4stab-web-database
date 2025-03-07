@@ -133,37 +133,29 @@
         }
         
         table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 600px;
             table-layout: fixed;
         }
 
+        table th:first-child,
+        table td:first-child {
+            width: 35%; /* Make first column (sequence) wider */
+            min-width: 200px;
+        }
+        
+        /* Give equal width to other columns */
+        table th:not(:first-child),
+        table td:not(:first-child) {
+            width: calc(65% / 6); /* Assuming you have around 6 other columns */
+            min-width: 70px;
+        }
+        
+        /* Ensure content doesn't overflow and break layout */
         th, td {
-            padding: 8px 12px; /* Reduce horizontal padding */
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-            white-space: nowrap; /* Prevents text wrapping */
             overflow: hidden;
-            text-overflow: ellipsis; /* Shows ellipsis for overflowing content */
+            text-overflow: ellipsis; /* Adds "..." when text is too long */
+            white-space: nowrap;
         }
-        
 
-      th {
-            text-align: left; /* Headers stay left-aligned */
-            background-color: #f8f9fa;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-    
-    td {
-            text-align: left; /* Default alignment */
-        }
-        
-    td.numeric {
-            text-align: center; /* Center numeric data */
-        }
         tbody tr:hover {
             background-color: #f5f5f5;
         }
