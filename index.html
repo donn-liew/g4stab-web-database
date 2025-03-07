@@ -84,7 +84,7 @@
             text-align: center;
         }
 
-        .subsequence-inputs {
+        .motif-inputs {
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -240,10 +240,10 @@
           <div class="instructions-content">
             <dl class="steps-list">
               <dt>1. Subsequence Search</dt>
-                <dd>• Enter one or more DNA subsequences (A, T, G, C only) to find G4 structures. 
+                <dd>• Enter one or more DNA motifs (A, T, G, C only) to find G4 structures. 
                     Spaces will be ignored and searches are not case-sensitive</dd>
-                <dd>• When multiple subsequences are entered, 
-                      the search will return only sequences containing ALL entered subsequences</dd>
+                <dd>• When multiple motifs are entered, 
+                      the search will return only sequences containing ALL entered motifs</dd>
                 <dd>• Leave sequence field empty to view stability predictions for all sequences</dd>
                 
             <dt>2. Select Ionic Condition</dt>
@@ -267,11 +267,11 @@
     <div class="search-container-wrapper">
     <div class="search-container">
         <div class="input-group">
-            <h3>Subsequences</h3>
-            <div class="subsequence-inputs" id="subsequences">
-                <input type="text" placeholder="Enter subsequence">
+            <h3>Motifs</h3>
+            <div class="motif-inputs" id="motifs">
+                <input type="text" placeholder="Enter motif">
             </div>
-            <button onclick="addSubsequence()">Add Subsequence</button>
+            <button onclick="addMotif()">Add Motif</button>
         </div>
 
         <div class="input-group">
@@ -304,11 +304,11 @@
         let globalData = null;
         let isLoading = false;
 
-        function addSubsequence() {
-            const container = document.getElementById('subsequences');
+        function addMotif() {
+            const container = document.getElementById('motifs');
             const input = document.createElement('input');
             input.type = 'text';
-            input.placeholder = 'Enter subsequence';
+            input.placeholder = 'Enter motif';
             container.appendChild(input);
         }
 
@@ -373,8 +373,8 @@
                         await loadInitialData();
                     }
                     
-                    const subsequenceInputs = document.querySelectorAll('#subsequences input');
-                    const subsequences = Array.from(subsequenceInputs)
+                    const motifInputs = document.querySelectorAll('#motifs  input');
+                    const motifs = Array.from(motifsInputs)
                         .map(input => input.value.replace(/\s+/g, '').toUpperCase())
                         .filter(value => value !== '');
     
@@ -386,8 +386,8 @@
                     const results = globalData.data.filter(row => {
                         const sequence = row[sequenceIdx];
                         
-                        const sequenceMatch = subsequences.length === 0 || 
-                            subsequences.every(subseq => sequence && subseq && sequence.includes(subseq));
+                        const sequenceMatch = motifs.length === 0 || 
+                            motifs.every(motif => sequence && subseq && sequence.includes(motif));
                         
                         const kMatch = !k || row[kIdx] === k;
                         const naMatch = !na || row[naIdx] === na;
