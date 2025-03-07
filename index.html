@@ -412,7 +412,7 @@
                 return;
             }
             
-            const predTempIndex = headers.indexOf('prediction_temperature');
+            const predTempIndex = headers.indexOf('predicted_temperature');
             const predErrIndex = headers.indexOf('pred_err');
             const dataHeaders = headers.slice(1).filter(header => header !== 'pred_err');
             const maxDisplay = 10000;
@@ -444,7 +444,7 @@
                         ${displayResults.map(row => `
                             <tr>
                                 ${dataHeaders.map(header => {
-                                    if(header === 'prediction_temperature') {
+                                    if(header === 'predicted_temperature') {
                                         return `<td>${row[predTempIndex]} ± ${row[predErrIndex]}</td>`;
                                     } else {
                                         return `<td>${row[headers.indexOf(header)]}</td>`;
