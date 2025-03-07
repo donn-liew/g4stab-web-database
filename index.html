@@ -274,7 +274,7 @@ table th:last-child, table td:last-child {
         <div class="instructions-container">
           <div class="instructions-content">
             <dl class="steps-list">
-              <dt>1. Subsequence Search</dt>
+              <dt>1. Motif Search</dt>
                 <dd>• Enter one or more DNA motifs (A, T, G, C only) to find G4 structures. 
                     Spaces will be ignored and searches are not case-sensitive</dd>
                 <dd>• When multiple motifs are entered, 
@@ -422,7 +422,7 @@ table th:last-child, table td:last-child {
                         const sequence = row[sequenceIdx];
                         
                         const sequenceMatch = motifs.length === 0 || 
-                            motifs.every(motif => sequence && subseq && sequence.includes(motif));
+                            motifs.every(motif => sequence && motif && sequence.includes(motif));
                         
                         const kMatch = !k || row[kIdx] === k;
                         const naMatch = !na || row[naIdx] === na;
