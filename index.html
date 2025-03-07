@@ -155,9 +155,11 @@
         }
         
         /* Ensure content doesn't overflow and break layout */
-        th, td {
+         th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
             overflow: hidden;
-            text-overflow: ellipsis; /* Adds "..." when text is too long */
+            text-overflow: ellipsis;
             white-space: nowrap;
         }
 
