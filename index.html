@@ -338,7 +338,7 @@
                         headers = rows[0];
                     }
                     
-                    allData.push(...rows.slice(1));
+                    allData.push(...rows.slice(1).filter(row => row.length > 1)); // Filter out empty rows
                     progressSpan.textContent = `${i + 1}/${files.length}`;
                 }
 
@@ -384,6 +384,8 @@
                     const liNh4Idx = globalData.headers.indexOf('li/nh4');
             
                     const results = globalData.data.filter(row => {
+                        if (!row || row.length <= sequenceIdx) return false;
+                        
                         const sequence = row[sequenceIdx];
                         
                         const sequenceMatch = subsequences.length === 0 || 
@@ -412,9 +414,14 @@
                 return;
             }
             
+            // Correct column index references
             const predTempIndex = headers.indexOf('predicted_temperature');
             const predErrIndex = headers.indexOf('pred_err');
-            const dataHeaders = headers.slice(1).filter(header => header !== 'pred_err');
+            
+            // Remove unwanted columns (like 'y_pred' if it exists)
+            const unwantedColumns = ['y_pred', 'pred_err'];
+            const dataHeaders = headers.filter(header => !unwantedColumns.includes(header));
+            
             const maxDisplay = 10000;
             const displayResults = results.slice(0, maxDisplay);
             
@@ -429,11 +436,11 @@
                         <thead>
                             <tr>
                             ${dataHeaders.map(header => {
-                                    if (header === 'k') {
+                                if (header === 'k') {
                                     return `<th>K<sup>+</sup></th>`;
-                                } else if (header == 'na') {
+                                } else if (header === 'na') {
                                     return `<th>Na<sup>+</sup></th>`;
-                                }  else if (header === 'li/nh4') {
+                                } else if (header === 'li/nh4') {
                                     return `<th>Li<sup>+</sup>/NH<sub>4</sub><sup>+</sup></th>`;
                                 }
                                 return `<th>${header}</th>`;
@@ -441,23 +448,28 @@
                             </tr>
                         </thead>
                         <tbody>
-                        ${displayResults.map(row => `
-                            <tr>
+                        ${displayResults.map(row => {
+                            if (!row || row.length <= 1) return '';
+                            return `<tr>
                                 ${dataHeaders.map(header => {
+                                    const index = headers.indexOf(header);
+                                    if (index < 0 || index >= row.length) return '<td>N/A</td>';
+                                    
                                     if(header === 'predicted_temperature') {
-                                        return `<td>${row[predTempIndex]} ± ${row[predErrIndex]}</td>`;
+                                        const tempValue = row[index] || 'N/A';
+                                        const errValue = predErrIndex >= 0 && predErrIndex < row.length ? row[predErrIndex] : '';
+                                        return `<td>${tempValue}${errValue ? ` ± ${errValue}` : ''}</td>`;
                                     } else {
-                                        return `<td>${row[headers.indexOf(header)]}</td>`;
+                                        return `<td>${row[index] || ''}</td>`;
                                     }
                                 }).join('')}
-                            </tr>
-                        `).join('')}
+                            </tr>`;
+                        }).join('')}
                         </tbody>
                     </table>
                 </div>
             `;
             resultsDiv.innerHTML = tableHTML;
-            
         }
     document.addEventListener('DOMContentLoaded', loadInitialData);
     </script>
