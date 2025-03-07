@@ -411,14 +411,10 @@
                 resultsDiv.innerHTML = '<p>No matches found.</p>';
                 return;
             }
-        
-            // Find the indices for important columns in the original headers
+            
             const predTempIndex = headers.indexOf('prediction_temperature');
             const predErrIndex = headers.indexOf('pred_err');
-            
-            // Create a filtered version of headers without pred_err
-            const displayHeaders = headers.filter((header, index) => index !== 0 && header !== 'pred_err');
-            
+            const dataHeaders = headers.slice(1).filter(header => header !== 'pred_err');
             const maxDisplay = 10000;
             const displayResults = results.slice(0, maxDisplay);
             
@@ -432,48 +428,35 @@
                     <table>
                         <thead>
                             <tr>
-                                ${displayHeaders.map(header => {
+                            ${dataHeaders.map(header => {
                                     if (header === 'k') {
-                                        return `<th>K<sup>+</sup></th>`;
-                                    } else if (header === 'na') {
-                                        return `<th>Na<sup>+</sup></th>`;
-                                    } else if (header === 'li/nh4') {
-                                        return `<th>Li<sup>+</sup>/NH<sub>4</sub><sup>+</sup></th>`;
-                                    }
-                                    return `<th>${header}</th>`;
-                                }).join('')}
+                                    return `<th>K<sup>+</sup></th>`;
+                                } else if (header == 'na') {
+                                    return `<th>Na<sup>+</sup></th>`;
+                                }  else if (header === 'li/nh4') {
+                                    return `<th>Li<sup>+</sup>/NH<sub>4</sub><sup>+</sup></th>`;
+                                }
+                                return `<th>${header}</th>`;
+                            }).join('')}
                             </tr>
                         </thead>
                         <tbody>
-                            ${displayResults.map(row => {
-                                // Create a new row with formatted cells
-                                const cells = headers.map((header, index) => {
-                                    // Skip the first column (ID) and pred_err column
-                                    if (index === 0 || header === 'pred_err') {
-                                        return null;
+                        ${displayResults.map(row => `
+                            <tr>
+                                ${dataHeaders.map(header => {
+                                    if(header === 'prediction_temperature') {
+                                        return `<td>${row[predTempIndex]} ± ${row[predErrIndex]}</td>`;
+                                    } else {
+                                        return `<td>${row[headers.indexOf(header)]}</td>`;
                                     }
-                                    
-                                    // Handle the prediction_temperature column
-                                    if (header === 'prediction_temperature' && predErrIndex !== -1) {
-                                        const tempValue = parseFloat(row[predTempIndex]);
-                                        const errValue = parseFloat(row[predErrIndex]);
-                                        
-                                        if (!isNaN(tempValue) && !isNaN(errValue)) {
-                                            return `<td>${tempValue.toFixed(1)} ± ${errValue.toFixed(1)}</td>`;
-                                        }
-                                    }
-                                    
-                                    return `<td>${row[index]}</td>`;
-                                }).filter(cell => cell !== null); // Remove null cells
-                                
-                                return `<tr>${cells.join('')}</tr>`;
-                            }).join('')}
+                                }).join('')}
+                            </tr>
+                        `).join('')}
                         </tbody>
                     </table>
                 </div>
             `;
             resultsDiv.innerHTML = tableHTML;
-        }
             
         }
     document.addEventListener('DOMContentLoaded', loadInitialData);
