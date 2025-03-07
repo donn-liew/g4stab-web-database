@@ -426,24 +426,43 @@
                     <table>
                         <thead>
                             <tr>
-                            ${dataHeaders.map(header => {
-                                    if (header === 'k') {
-                                    return `<th>K<sup>+</sup></th>`;
-                                } else if (header == 'na') {
-                                    return `<th>Na<sup>+</sup></th>`;
-                                }  else if (header === 'li/nh4') {
-                                    return `<th>Li<sup>+</sup>/NH<sub>4</sub><sup>+</sup></th>`;
-                                }
-                                return `<th>${header}</th>`;
-                            }).join('')}
+                                ${dataHeaders.map((header, index) => {
+                                    if (header === 'pred_err') {
+                                        return '';
+                                    } else if (header === 'k') {
+                                        return `<th>K<sup>+</sup></th>`;
+                                    } else if (header == 'na') {
+                                        return `<th>Na<sup>+</sup></th>`;
+                                    } else if (header === 'li/nh4') {
+                                        return `<th>Li<sup>+</sup>/NH<sub>4</sub><sup>+</sup></th>`;
+                                    }
+                                    return `<th>${header}</th>`;
+                                }).join('')}
                             </tr>
                         </thead>
                         <tbody>
-                            ${displayResults.map(row => `
-                                <tr>
-                                    ${row.slice(1).map(cell => `<td>${cell}</td>`).join('')}
-                                </tr>
-                            `).join('')}
+                            ${displayResults.map(row => {
+                                const predTempIndex = dataHeaders.indexOf('prediction_temperature');
+                                const predErrIndex = dataHeaders.indexOf('pred_err');
+                                
+                                return `<tr>
+                                    ${row.slice(1).map((cell, index) => {
+                                        // Handle the prediction_temperature column
+                                        if (index === predTempIndex && predErrIndex !== -1) {
+                                            const tempValue = parseFloat(cell);
+                                            const errValue = parseFloat(row[predErrIndex + 1]); // +1 because we sliced off the first column
+                                            if (!isNaN(tempValue) && !isNaN(errValue)) {
+                                                return `<td>${tempValue.toFixed(1)} ± ${errValue.toFixed(1)}</td>`;
+                                            }
+                                        }
+                                        // Skip the pred_err column
+                                        if (index === predErrIndex) {
+                                            return '';
+                                        }
+                                        return `<td>${cell}</td>`;
+                                    }).join('')}
+                                </tr>`;
+                            }).join('')}
                         </tbody>
                     </table>
                 </div>
