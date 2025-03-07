@@ -461,21 +461,21 @@ table th:last-child, table td:last-child {
                     <table>
                         <thead>
                             <tr>
-                            ${dataHeaders.map(header => {
+                                ${dataHeaders.map(header => {
                                     if (header === 'k') {
-                                    return `<th>K<sup>+</sup></th> (mM)`;
-                                } else if (header == 'na') {
-                                    return `<th>Na<sup>+</sup></th> (mM)`;
-                                }  else if (header === 'li/nh4') {
-                                    return `<th>Li<sup>+</sup>/NH<sub>4</sub><sup>+</sup></th> (mM)`;
-                                }  else if (header === 'sequence') {
-                                    return `Sequence`
-                                }  else if (header == 'predicted_temperature') {
-                                    return `Predicted Tₘ (°C)`
-                                }  else if (header == 'pred_err') {
-                                    return `Uncertainty (SEM)`
-                                }
-                                return `<th>${header}</th>`;
+                                        return `<th>K<sup>+</sup> (mM)</th>`;
+                                    } else if (header === 'na') {
+                                        return `<th>Na<sup>+</sup> (mM)</th>`;
+                                    } else if (header === 'li/nh4') {
+                                        return `<th>Li<sup>+</sup>/NH<sub>4</sub><sup>+</sup> (mM)</th>`;
+                                    } else if (header === 'sequence') {
+                                        return `<th>Sequence</th>`;
+                                    } else if (header === 'predicted_temperature') {
+                                        return `<th>Predicted Tₘ (°C)</th>`;
+                                    } else if (header === 'pred_err') {
+                                        return `<th>Uncertainty (SEM)</th>`;
+                                    }
+                                    return `<th>${header}</th>`;
                             }).join('')}
                             </tr>
                         </thead>
