@@ -8,7 +8,7 @@
     <style>
         body {
             max-width: 100% !important;
-            padding: 20px !important;
+            padding: 0 !important;
         }
         
         .description-box {
@@ -139,28 +139,29 @@
             table-layout: fixed;
         }
 
-        table th:first-child,
-        table td:first-child {
-            width: 35%; /* Make sequence column wider */
-            min-width: 200px;
-            text-align: left; /* Left-align text in first column */
-        }
-        
-        /* Give equal width to other columns */
-        table th:not(:first-child),
-        table td:not(:first-child) {
-            width: calc(65% / 6); /* Distribute remaining space */
-            min-width: 70px;
-            text-align: center; /* Center numeric values */
-        }
-        
+        table th:nth-child(1), table td:nth-child(1) {width: 2%; text-align: center;} /* chr */
+        table th:nth-child(2), table td:nth-child(2) {width: 4%; text-align: center;} /* start */
+        table th:nth-child(3), table td:nth-child(3) {width: 4%; text-align: center;} /* end */
+        table th:nth-child(4), table td:nth-child(4) {width: 4%; text-align: center;} /* strand */
+        table th:nth-child(5), table td:nth-child(5) {width: 6%; text-align: left;} /* symbol */
+        table th:nth-child(6), table td:nth-child(6) {width: 8%; text-align: left;} /* gene type */
+        table th:nth-child(7), table td:nth-child(7) {width: 5%; text-align: center;} /* phastCons */
+        table th:nth-child(8), table td:nth-child(8) {width: 4%; text-align: center;} /* phyloP */
+        table th:nth-child(9), table td:nth-child(9) {width: 18%; text-align: left;} /* sequence */
+
+        table th:nth-child(10), table td:nth-child(10) {width: 4%; text-align: center;} /* k */
+        table th:nth-child(11), table td:nth-child(11) {width: 4%; text-align: center;} /* na */
+        table th:nth-child(12), table td:nth-child(12) {width: 5%; text-align: center;} /* li/nh4 */
+        table th:nth-child(13), table td:nth-child(13) {width: 5%; text-align: center;} /* predicted_temp */
+        table th:nth-child(14), table td:nth-child(14) {width: 4%; text-align: center;} /* sem */
+
         /* Ensure content doesn't overflow and break layout */
          th, td {
             padding: 12px;
             border-bottom: 1px solid #ddd;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            overflow: visible; /* Changed from hidden to visible */
+            white-space: normal; /* Changed from nowrap to normal */
+            word-wrap: break-word; /* Ensures long words break if needed */
         }
 
         /* Add alternating row colors */
@@ -355,9 +356,16 @@ table th:last-child, table td:last-child {
             const progressSpan = document.getElementById('progress');
             loadingDiv.style.display = 'block';
 
+            const startTime = performance.now();
+
             try {
-                const files = ['pred_seqs_00.csv', 'pred_seqs_01.csv','pred_seqs_02.csv','pred_seqs_03.csv','pred_seqs_04.csv','pred_seqs_05.csv','pred_seqs_06.csv','pred_seqs_07.csv','pred_seqs_08.csv', 'pred_seqs_09.csv','pred_seqs_10.csv','pred_seqs_11.csv','pred_seqs_12.csv','pred_seqs_13.csv','pred_seqs_14.csv'];
-                const baseUrl = 'https://donn-liew.github.io/my-test-static-page/data/';
+                const files = []
+                for (let i = 0; i < 157; i++) {
+                    files.push(`pred_seqs_${String(i).padStart(3, '0')}.csv`);
+                }
+                // const files = ['pred_seqs_00.csv', 'pred_seqs_01.csv','pred_seqs_02.csv','pred_seqs_03.csv','pred_seqs_04.csv','pred_seqs_05.csv','pred_seqs_06.csv','pred_seqs_07.csv','pred_seqs_08.csv', 'pred_seqs_09.csv','pred_seqs_10.csv','pred_seqs_11.csv','pred_seqs_12.csv','pred_seqs_13.csv','pred_seqs_14.csv'];
+                const baseUrl = './data/'; 
+                // const baseUrl = 'https://donn-liew.github.io/my-test-static-page/data/';
                 
                 progressSpan.textContent = `0/${files.length}`;
                 
@@ -382,7 +390,26 @@ table th:last-child, table td:last-child {
                     data: allData
                 };
                 
+                // Calculate total time
+                const endTime = performance.now();
+                const totalTime = ((endTime - startTime)/1000).toFixed(2);
+                
+                // Add a simple load time indicator to top right
+                const headerElement = document.querySelector('h1');
+                const timeDiv = document.createElement('div');
+                timeDiv.style.textAlign = 'right';
+                timeDiv.style.marginRight = '20px';
+                timeDiv.style.marginTop = '-30px';
+                timeDiv.style.fontSize = '1em';
+                timeDiv.style.color = '#666';
+                timeDiv.innerHTML = `Loaded in ${totalTime} seconds`;
+                headerElement.insertAdjacentElement('afterend', timeDiv);
+
                 loadingDiv.style.display = 'none';
+                        
+                // document.getElementById('combined-salt').value = '100-0-0'; // REMOVE BEFORE STORING BACK ON GITHUB
+                // searchSequences(); // REMOVE BEFORE STORING BACK ON GITHUB
+
             } catch (error) {
                 console.error('Error loading data:', error);
                 loadingDiv.innerHTML = 'Error loading data. Please refresh the page.';
@@ -413,7 +440,7 @@ table th:last-child, table td:last-child {
                         .map(input => input.value.replace(/\s+/g, '').toUpperCase())
                         .filter(value => value !== '');
     
-                    const sequenceIdx = globalData.headers.indexOf('sequence');
+                    const sequenceIdx = globalData.headers.indexOf('seq');
                     const kIdx = globalData.headers.indexOf('k');
                     const naIdx = globalData.headers.indexOf('na');
                     const liNh4Idx = globalData.headers.indexOf('li/nh4');
@@ -438,7 +465,17 @@ table th:last-child, table td:last-child {
                         `<p style="color: red;">Error searching data: ${error.message}</p>`;
                 }
             }
+        
 
+        function toggleColumn(columnIndex, show) {
+            const tables = document.querySelectorAll('#results table');
+            tables.forEach(table => {
+                const cells = table.querySelectorAll(`th:nth-child(${columnIndex}), td:nth-child(${columnIndex})`);
+                cells.forEach(cell => {
+                    cell.style.display = show ? '' : 'none';
+                });
+            });
+        }
         function displayResults(headers, results) {
             const resultsDiv = document.getElementById('results');
             
@@ -448,7 +485,7 @@ table th:last-child, table td:last-child {
             }
 
             const dataHeaders = headers.slice(1);
-            const maxDisplay = 10000;
+            const maxDisplay = 1000;
             const displayResults = results.slice(0, maxDisplay);
             
             let noteText = results.length > maxDisplay ? 
@@ -468,12 +505,14 @@ table th:last-child, table td:last-child {
                                         return `<th>Na<sup>+</sup> (mM)</th>`;
                                     } else if (header === 'li/nh4') {
                                         return `<th>Li<sup>+</sup>/NH<sub>4</sub><sup>+</sup> (mM)</th>`;
-                                    } else if (header === 'sequence') {
+                                    } else if (header === 'seq') {
                                         return `<th>Sequence</th>`;
                                     } else if (header === 'predicted_temperature') {
                                         return `<th>Predicted Tₘ (°C)</th>`;
-                                    } else if (header === 'pred_err') {
-                                        return `<th>Uncertainty (SEM)</th>`;
+                                    } else if (header.trim().toLowerCase() === 'sem') {
+                                        return `<th>Error (SEM)</th>`;
+                                    } else if (header === 'chr') {
+                                        return `<th>Chr</th>`;
                                     }
                                     return `<th>${header}</th>`;
                             }).join('')}
@@ -490,9 +529,109 @@ table th:last-child, table td:last-child {
                 </div>
             `;
             resultsDiv.innerHTML = tableHTML;
+
+            if (!document.getElementById('toggle-chr').checked) toggleColumn(1, false);
+            if (!document.getElementById('toggle-start').checked) toggleColumn(2, false);
+            if (!document.getElementById('toggle-end').checked) toggleColumn(3, false);
+            if (!document.getElementById('toggle-strand').checked) toggleColumn(4, false);
+            if (!document.getElementById('toggle-symbol').checked) toggleColumn(5, false);
+            if (!document.getElementById('toggle-genetype').checked) toggleColumn(6, false);
+            if (!document.getElementById('toggle-phastcons').checked) toggleColumn(7, false);
+            if (!document.getElementById('toggle-phylop').checked) toggleColumn(8, false);
+            if (!document.getElementById('toggle-sequence').checked) toggleColumn(9, false);
+            if (!document.getElementById('toggle-k').checked) toggleColumn(10, false);
+            if (!document.getElementById('toggle-na').checked) toggleColumn(11, false);
+            if (!document.getElementById('toggle-li').checked) toggleColumn(12, false);
+            if (!document.getElementById('toggle-ypred').checked) toggleColumn(13, false);
+            if (!document.getElementById('toggle-yerr').checked) toggleColumn(14, false);
             
         }
     document.addEventListener('DOMContentLoaded', loadInitialData);
+
+    document.addEventListener('DOMContentLoaded', function() {
+    // Create the toggle controls
+    const toggleControls = document.createElement('div');
+    toggleControls.className = 'column-toggles';
+    toggleControls.style.margin = '15px 0';
+    
+    toggleControls.innerHTML = `
+        <!-- Column toggles control table column visibility -->
+        <h3 style="margin-top: 0; margin-bottom: 8px; font-size: 16px;">Table Display Options (Show/Hide Columns)</h3>
+        <div style="display: inline-block; border: 1px solid #ccc; border-radius: 6px; padding: 12px; background-color: #f9f9f9;">
+        <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 10px;">
+            <label style="display: flex; align-items: center; cursor: pointer;">
+                Chromosome<input type="checkbox" id="toggle-chr">
+            </label>
+            <label style="display: flex; align-items: center; cursor: pointer;">
+                Start<input type="checkbox" id="toggle-start">
+            </label>
+            <label style="display: flex; align-items: center; cursor: pointer;">
+                End<input type="checkbox" id="toggle-end">
+            </label>
+            <label style="display: flex; align-items: center; cursor: pointer;">
+                Strand<input type="checkbox" id="toggle-strand">
+            </label>
+            <label style="display: flex; align-items: center; cursor: pointer;">
+                Symbol<input type="checkbox" id="toggle-symbol">
+            </label>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 10px;">
+            <label style="display: flex; align-items: center; cursor: pointer;">
+                <span style="white-space: nowrap; margin-right: 5px;">Gene Type</span>
+                <input type="checkbox" id="toggle-genetype">
+            </label>
+            <label style="display: flex; align-items: center; cursor: pointer;">
+                phastCons<input type="checkbox" id="toggle-phastcons">
+            </label>
+            <label style="display: flex; align-items: center; cursor: pointer;">
+                phyloP<input type="checkbox" id="toggle-phylop">
+            </label>
+            <label style="display: flex; align-items: center; cursor: pointer;">
+                Sequence<input type="checkbox" id="toggle-sequence" checked>
+            </label>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 10px;">
+            <label style="display: flex; align-items: center; cursor: pointer;">
+                K⁺<input type="checkbox" id="toggle-k" checked>
+            </label>
+            <label style="display: flex; align-items: center; cursor: pointer;">
+                Na⁺<input type="checkbox" id="toggle-na" checked>
+            </label>
+            <label style="display: flex; align-items: center; cursor: pointer;">
+                Li⁺/NH₄⁺<input type="checkbox" id="toggle-li" checked>
+            </label>
+            <label style="display: flex; align-items: center; cursor: pointer;">
+                <span style="white-space: nowrap; margin-right: 5px;">Predicted Tₘ</span>
+                <input type="checkbox" id="toggle-ypred" checked>
+            </label>
+            <label style="display: flex; align-items: center; cursor: pointer;">
+                Sem<input type="checkbox" id="toggle-yerr">
+            </label>
+        </div>
+    </div>
+    `;
+    
+    // Insert the controls before the results div
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.parentNode.insertBefore(toggleControls, resultsDiv);
+    
+    // Add event listeners
+    document.getElementById('toggle-chr').addEventListener('change', function() {toggleColumn(1, this.checked);});
+    document.getElementById('toggle-start').addEventListener('change', function() {toggleColumn(2, this.checked);});
+    document.getElementById('toggle-end').addEventListener('change', function() {toggleColumn(3, this.checked);});
+    document.getElementById('toggle-strand').addEventListener('change', function() {toggleColumn(4, this.checked);});
+    document.getElementById('toggle-symbol').addEventListener('change', function() {toggleColumn(5, this.checked);});
+    document.getElementById('toggle-genetype').addEventListener('change', function() {toggleColumn(6, this.checked);});
+    document.getElementById('toggle-phastcons').addEventListener('change', function() {toggleColumn(7, this.checked);});
+    document.getElementById('toggle-phylop').addEventListener('change', function() {toggleColumn(8, this.checked);});
+    document.getElementById('toggle-sequence').addEventListener('change', function() {toggleColumn(9, this.checked);});
+    document.getElementById('toggle-k').addEventListener('change', function() {toggleColumn(10, this.checked);});
+    document.getElementById('toggle-na').addEventListener('change', function() {toggleColumn(11, this.checked);});
+    document.getElementById('toggle-li').addEventListener('change', function() {toggleColumn(12, this.checked);});
+    document.getElementById('toggle-ypred').addEventListener('change', function() {toggleColumn(13, this.checked);});
+    document.getElementById('toggle-yerr').addEventListener('change', function() {toggleColumn(14, this.checked);});
+});
     </script>
 </body>
 </html>
