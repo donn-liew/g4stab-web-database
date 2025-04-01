@@ -260,6 +260,7 @@ table th:last-child, table td:last-child {
             background: #226f7b;
         }
     </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 </head>
 <body>
     <h1 style="text-align: center;">G4 Melting Temperature Prediction Database</h1>
@@ -331,7 +332,11 @@ table th:last-child, table td:last-child {
 
     <div id="loading" class="loading" style="display: none;">
         <div class="spinner"></div>
-        <div>Loading data... <span id="progress">0/0</span> files</div>
+        <div style="white-space: pre-line;">
+            Loading data... <span id="progress">0/0</span> files
+            This may take a few minutes
+            <em>Note: The initial load might take longer, especially if it's your first time accessing the dataset. Future loads will be faster thanks to caching.</em>
+        </div>
     </div>
 
     <div id="results"></div>
@@ -355,117 +360,219 @@ table th:last-child, table td:last-child {
             const loadingDiv = document.getElementById('loading');
             const progressSpan = document.getElementById('progress');
             loadingDiv.style.display = 'block';
-
+        
             const startTime = performance.now();
-
+            const CACHE_VERSION = 'g4-data-v1'; // Increment this when your data changes
+            
             try {
-                const files = []
-                for (let i = 0; i < 16; i++) {
-                    files.push(`pred_seqs_${String(i).padStart(3, '0')}.csv`);
+                // Check for cached data first
+                const cachedData = localStorage.getItem(`${CACHE_VERSION}-data`);
+                const cachedHeaders = localStorage.getItem(`${CACHE_VERSION}-headers`);
+                
+                if (cachedData && cachedHeaders) {
+                    console.log('Loading data from cache...');
+                    globalData = {
+                        headers: JSON.parse(cachedHeaders),
+                        data: JSON.parse(cachedData)
+                    };
+                    
+                    const endTime = performance.now();
+                    const totalTime = ((endTime - startTime)/1000).toFixed(2);
+                    
+                    addLoadTimeIndicator(totalTime, true);
+                    loadingDiv.style.display = 'none';
+                    isLoading = false;
+                    return;
                 }
-                // const files = ['pred_seqs_00.csv', 'pred_seqs_01.csv','pred_seqs_02.csv','pred_seqs_03.csv','pred_seqs_04.csv','pred_seqs_05.csv','pred_seqs_06.csv','pred_seqs_07.csv','pred_seqs_08.csv', 'pred_seqs_09.csv','pred_seqs_10.csv','pred_seqs_11.csv','pred_seqs_12.csv','pred_seqs_13.csv','pred_seqs_14.csv'];
-                const baseUrl = './data/'; 
-                // const baseUrl = 'https://donn-liew.github.io/my-test-static-page/data/';
+                
+                // If no cache, load data with parallel fetching
+                console.log('No cache found, fetching data...');
+                
+                // Import Papa Parse for better CSV parsing
+                await loadPapaParseIfNeeded();
+                
+                // Create batches for parallel loading (groups of 10 files)
+                const totalFiles = 157;
+                const files = Array.from({length: totalFiles}, (_, i) => 
+                    `pred_seqs_${String(i).padStart(3, '0')}.csv`);
+                const baseUrl = './data/';
+                
+                const BATCH_SIZE = 10; // Number of files to load in parallel
+                const batches = [];
+                
+                for (let i = 0; i < files.length; i += BATCH_SIZE) {
+                    batches.push(files.slice(i, i + BATCH_SIZE));
+                }
                 
                 progressSpan.textContent = `0/${files.length}`;
                 
                 let allData = [];
                 let headers = null;
+                let filesProcessed = 0;
                 
-                for(let i = 0; i < files.length; i++) {
-                    const response = await fetch(baseUrl + files[i]);
-                    const csvText = await response.text();
-                    const rows = csvText.split('\n').map(row => row.split(','));
+                // Process batches sequentially, but files within each batch in parallel
+                for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+                    const batch = batches[batchIndex];
                     
-                    if (!headers) {
-                        headers = rows[0];
-                    }
+                    // Process all files in this batch in parallel
+                    const batchPromises = batch.map(async file => {
+                        try {
+                            const response = await fetch(baseUrl + file);
+                            const csvText = await response.text();
+                            
+                            // Use Papa Parse for better CSV parsing
+                            const parseResult = Papa.parse(csvText, {
+                                header: false,
+                                skipEmptyLines: true
+                            });
+                            
+                            // Extract headers from first file
+                            if (!headers && parseResult.data.length > 0) {
+                                headers = parseResult.data[0];
+                                return parseResult.data.slice(1);
+                            }
+                            
+                            return parseResult.data.slice(1);
+                        } catch (error) {
+                            console.error(`Error processing file ${file}:`, error);
+                            return [];
+                        }
+                    });
                     
-                    allData.push(...rows.slice(1));
-                    progressSpan.textContent = `${i + 1}/${files.length}`;
+                    // Wait for all files in this batch to complete
+                    const batchResults = await Promise.all(batchPromises);
+                    
+                    // Merge batch results into allData
+                    batchResults.forEach(fileData => {
+                        allData.push(...fileData);
+                    });
+                    
+                    // Update progress
+                    filesProcessed += batch.length;
+                    progressSpan.textContent = `${filesProcessed}/${files.length}`;
                 }
-
+                
+                // Store processed data
                 globalData = {
                     headers: headers,
                     data: allData
                 };
                 
-                // Calculate total time
+                // Cache the data for future use
+                try {
+                    localStorage.setItem(`${CACHE_VERSION}-headers`, JSON.stringify(headers));
+                    localStorage.setItem(`${CACHE_VERSION}-data`, JSON.stringify(allData));
+                    console.log('Data cached successfully');
+                } catch (e) {
+                    console.warn('Unable to cache data (likely quota exceeded):', e);
+                }
+                
                 const endTime = performance.now();
                 const totalTime = ((endTime - startTime)/1000).toFixed(2);
                 
-                // Add a simple load time indicator to top right
-                const headerElement = document.querySelector('h1');
-                const timeDiv = document.createElement('div');
-                timeDiv.style.textAlign = 'right';
-                timeDiv.style.marginRight = '20px';
-                timeDiv.style.marginTop = '-30px';
-                timeDiv.style.fontSize = '1em';
-                timeDiv.style.color = '#666';
-                timeDiv.innerHTML = `Loaded in ${totalTime} seconds`;
-                headerElement.insertAdjacentElement('afterend', timeDiv);
-
+                addLoadTimeIndicator(totalTime, false);
+                
                 loadingDiv.style.display = 'none';
-                        
-                // document.getElementById('combined-salt').value = '100-0-0'; // REMOVE BEFORE STORING BACK ON GITHUB
-                // searchSequences(); // REMOVE BEFORE STORING BACK ON GITHUB
-
             } catch (error) {
                 console.error('Error loading data:', error);
-                loadingDiv.innerHTML = 'Error loading data. Please refresh the page.';
+                loadingDiv.innerHTML = `<div class="spinner"></div><div>Error loading data: ${error.message}. Please refresh the page.</div>`;
             } finally {
                 isLoading = false;
             }
         }
 
-          async function searchSequences() {
-                try {
-                    const combinedSaltValue = document.getElementById('combined-salt').value;
-                    
-                    if (!combinedSaltValue) {
-                        document.getElementById('results').innerHTML = 
-                            `<p style="color: red;">Please select a salt concentration</p>`;
-                        return;
-                    }
-                    
-                    // Parse the combined value (format: "k-na-li_nh4")
-                    const [k, na, li_nh4] = combinedSaltValue.split('-');
-                    
-                    if (!globalData) {
-                        await loadInitialData();
-                    }
-                    
-                    const motifInputs = document.querySelectorAll('#motifs  input');
-                    const motifs = Array.from(motifInputs)
-                        .map(input => input.value.replace(/\s+/g, '').toUpperCase())
-                        .filter(value => value !== '');
-    
-                    const sequenceIdx = globalData.headers.indexOf('seq');
-                    const kIdx = globalData.headers.indexOf('k');
-                    const naIdx = globalData.headers.indexOf('na');
-                    const liNh4Idx = globalData.headers.indexOf('li/nh4');
-            
-                    const results = globalData.data.filter(row => {
-                        const sequence = row[sequenceIdx];
-                        
-                        const sequenceMatch = motifs.length === 0 || 
-                            motifs.every(motif => sequence && motif && sequence.includes(motif));
-                        
-                        const kMatch = !k || row[kIdx] === k;
-                        const naMatch = !na || row[naIdx] === na;
-                        const liNh4Match = !li_nh4 || row[liNh4Idx] === li_nh4;
-            
-                        return sequenceMatch && kMatch && naMatch && liNh4Match;
-                    });
-            
-                    displayResults(globalData.headers, results);
-                } catch (error) {
-                    console.error('Error:', error);
-                    document.getElementById('results').innerHTML = 
-                        `<p style="color: red;">Error searching data: ${error.message}</p>`;
-                }
-            }
+    function searchSequences() {
+    try {
+        const combinedSaltValue = document.getElementById('combined-salt').value;
         
+        if (!combinedSaltValue) {
+            document.getElementById('results').innerHTML = 
+                `<p style="color: red;">Please select a salt concentration</p>`;
+            return;
+        }
+        
+        // Parse the combined value (format: "k-na-li_nh4")
+        const [k, na, li_nh4] = combinedSaltValue.split('-');
+        
+        if (!globalData) {
+            loadInitialData().then(() => {
+                // Retry search once data is loaded
+                searchSequences();
+            });
+            return;
+        }
+        
+        const motifInputs = document.querySelectorAll('#motifs input');
+        const motifs = Array.from(motifInputs)
+            .map(input => input.value.replace(/\s+/g, '').toUpperCase())
+            .filter(value => value !== '');
+
+        // Find indices for relevant columns only once
+        const sequenceIdx = globalData.headers.indexOf('seq');
+        const kIdx = globalData.headers.indexOf('k');
+        const naIdx = globalData.headers.indexOf('na');
+        const liNh4Idx = globalData.headers.indexOf('li/nh4');
+        
+        // Show loading indicator for search
+        document.getElementById('results').innerHTML = '<div class="spinner"></div><div>Searching...</div>';
+        
+        // Use setTimeout to allow UI to update before intensive search
+        setTimeout(() => {
+            const results = globalData.data.filter(row => {
+                if (!row || row.length <= sequenceIdx) return false;
+                
+                const sequence = row[sequenceIdx];
+                
+                const sequenceMatch = motifs.length === 0 || 
+                    motifs.every(motif => sequence && sequence.includes(motif));
+                
+                const kMatch = !k || row[kIdx] === k;
+                const naMatch = !na || row[naIdx] === na;
+                const liNh4Match = !li_nh4 || row[liNh4Idx] === li_nh4;
+        
+                return sequenceMatch && kMatch && naMatch && liNh4Match;
+            });
+        
+            displayResults(globalData.headers, results);
+        }, 10);
+    } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('results').innerHTML = 
+            `<p style="color: red;">Error searching data: ${error.message}</p>`;
+    }
+}
+        function loadPapaParseIfNeeded() {
+    if (window.Papa) return Promise.resolve();
+    
+    return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js';
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
+}
+
+// Helper to add load time indicator
+function addLoadTimeIndicator(totalTime, fromCache) {
+    const headerElement = document.querySelector('h1');
+    
+    // Remove existing time indicator if any
+    const existingTimeDiv = document.querySelector('.time-indicator');
+    if (existingTimeDiv) {
+        existingTimeDiv.remove();
+    }
+    
+    const timeDiv = document.createElement('div');
+    timeDiv.className = 'time-indicator';
+    timeDiv.style.textAlign = 'right';
+    timeDiv.style.marginRight = '20px';
+    timeDiv.style.marginTop = '-30px';
+    timeDiv.style.fontSize = '1em';
+    timeDiv.style.color = '#666';
+    timeDiv.innerHTML = `Loaded in ${totalTime} seconds ${fromCache ? '(from cache)' : ''}`;
+    headerElement.insertAdjacentElement('afterend', timeDiv);
+}
 
         function toggleColumn(columnIndex, show) {
             const tables = document.querySelectorAll('#results table');
