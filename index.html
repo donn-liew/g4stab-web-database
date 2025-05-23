@@ -395,7 +395,7 @@ table th:last-child, table td:last-child {
                 await loadPapaParseIfNeeded();
                 
                 // Create batches for parallel loading (groups of 10 files)
-                const totalFiles = 16;
+                const totalFiles = 19;
                 const files = Array.from({length: totalFiles}, (_, i) => 
                     `pred_seqs_${String(i).padStart(3, '0')}.csv`);
                 const baseUrl = './data/';
