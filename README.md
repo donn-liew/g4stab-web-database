@@ -1,6 +1,6 @@
 # G4STAB Web Database
 
-A web-based database providing melting temperature predictions for experimentally validated G-quadruplex (G4) sequences using the G4STAB deep learning model.
+A **[web-based database](https://donn-liew.github.io/g4stab-web-database/)** providing melting temperature predictions for experimentally validated G-quadruplex (G4) sequences using the G4STAB deep learning model.
 
 ## About
 
