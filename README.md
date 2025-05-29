@@ -15,7 +15,7 @@ This database contains G4 stability predictions across four physiologically rele
 ## Features
 
 - **Motif Search**: Search for specific DNA motifs within G4 sequences
-- **Multi-condition Analysis**: Compare stability across four ionic conditions (high K+, moderate K+, Na+-only, cancer-like)
+- **Multi-condition Analysis**: Compare stability across four ionic conditions (high K$^+$, moderate K+, Na+-only, cancer-like)
 - **Interactive Results**: Customizable table view with column visibility controls
 - **Genomic Context**: Full genomic annotations for biological relevance
 - **Confidence Intervals**: Standard error measurements for all predictions
