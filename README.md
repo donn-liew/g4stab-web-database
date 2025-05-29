@@ -4,7 +4,7 @@ A web-based database providing melting temperature predictions for experimentall
 
 ## About
 
-This database contains G4 stability predictions across four physiologically relevant ionic conditions. The database contains 1,566,008 G-quadruplex sequences with comprehensive genomic annotations including:
+This database contains G4 stability predictions across four physiologically relevant ionic conditions. The database contains 1,566,008 G4 sequences with genomic annotations including:
 
 - Chromosome location and strand information
 - Gene association and gene type classification  
