@@ -318,8 +318,8 @@ table th:last-child, table td:last-child {
            <h3>Salt Concentrations</h3>
             <div class="salt-inputs">
                 <select id="combined-salt">
-                    <option value="">Select Salt Concentration</option>
-                    <option value="100-0-0">100 mM K⁺, 0 mM Na⁺, 0 mM Li⁺/NH₄⁺</option>
+                    <!--  <option value="">Select Salt Concentration</option> -->
+                    <option value="100-0-0" selected>100 mM K⁺, 0 mM Na⁺, 0 mM Li⁺/NH₄⁺</option>
                     <option value="50-0-0">50 mM K⁺, 0 mM Na⁺, 0 mM Li⁺/NH₄⁺</option>
                     <option value="0-100-0">0 mM K⁺, 100 mM Na⁺, 0 mM Li⁺/NH₄⁺</option>
                     <option value="70-30-0">70 mM K⁺, 30 mM Na⁺, 0 mM Li⁺/NH₄⁺</option>
@@ -486,13 +486,8 @@ table th:last-child, table td:last-child {
 
     function searchSequences() {
     try {
-        const combinedSaltValue = document.getElementById('combined-salt').value;
-        
-        if (!combinedSaltValue) {
-            document.getElementById('results').innerHTML = 
-                `<p style="color: red;">Please select a salt concentration</p>`;
-            return;
-        }
+        // const combinedSaltValue = document.getElementById('combined-salt').value;
+        const combinedSaltValue = document.getElementById('combined-salt').value || '100-0-0';
         
         // Parse the combined value (format: "k-na-li_nh4")
         const [k, na, li_nh4] = combinedSaltValue.split('-');
