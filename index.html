@@ -259,6 +259,41 @@ table th:last-child, table td:last-child {
         .table-container::-webkit-scrollbar-thumb:hover {
             background: #226f7b;
         }
+
+    .search-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    .search-wrapper .tooltip {
+      position: absolute;
+      top: 50%;
+      left: 110%;
+      transform: translateY(-50%);
+      background: #ffffff;
+      border: 1px solid #2c8898;
+      padding: 8px 10px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      font-size: 0.9em;
+      max-width: 260px;
+      display: none;
+      z-index: 20;
+      white-space: normal;
+    }
+    .search-wrapper.loading .tooltip { display: block; }   /* visible while loading */
+    .search-wrapper.loading #search-btn {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .search-wrapper .blocker { display: none; }
+    .search-wrapper.loading .blocker {
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      cursor: not-allowed;
+      background: transparent;
+    }
     </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 </head>
@@ -330,7 +365,13 @@ table th:last-child, table td:last-child {
 </div>
     
     <div style="text-align: center;">
-        <button onclick="searchSequences()">Search</button>
+      <div class="search-wrapper loading" id="search-wrapper">
+        <button id="search-btn" onclick="searchSequences()" disabled>Search</button>
+        <div class="blocker" id="search-blocker" aria-hidden="true"></div>
+        <div class="tooltip" id="search-tooltip" role="status" aria-live="polite">
+          Loading data… 
+        </div>
+      </div>
     </div>
 
     <div id="loading" class="loading" style="display: none;">
@@ -345,6 +386,45 @@ table th:last-child, table td:last-child {
     <div id="results"></div>
 
     <script>
+    // --- Search button enable/disable & tooltip helpers ---
+    function setSearchLoading(isLoadingFlag, message) {
+      const wrapper = document.getElementById('search-wrapper');
+      const btn = document.getElementById('search-btn');
+      const tip = document.getElementById('search-tooltip');
+      if (!wrapper || !btn || !tip) return;
+      if (isLoadingFlag) {
+        wrapper.classList.add('loading');
+        btn.setAttribute('disabled', 'disabled');
+        if (message) tip.textContent = message;
+      } else {
+        wrapper.classList.remove('loading');
+        btn.removeAttribute('disabled');
+        tip.style.display = 'none';
+      }
+    }
+    // Show tooltip briefly on blocker click
+    function initSearchTooltipInteractions() {
+      const wrapper = document.getElementById('search-wrapper');
+      const blocker = document.getElementById('search-blocker');
+      const tip = document.getElementById('search-tooltip');
+      if (!wrapper || !blocker || !tip) return;
+      blocker.addEventListener('click', () => {
+        if (!wrapper.classList.contains('loading')) return;
+        tip.style.display = 'block';
+        clearTimeout(window.__tipTimer);
+        window.__tipTimer = setTimeout(() => {
+          if (!wrapper.classList.contains('loading')) return;
+          tip.style.display = ''; // revert to CSS (visible while loading)
+        }, 1800);
+      });
+      // Also show while hovering
+      wrapper.addEventListener('mouseenter', () => {
+        if (wrapper.classList.contains('loading')) tip.style.display = 'block';
+      });
+      wrapper.addEventListener('mouseleave', () => {
+        if (wrapper.classList.contains('loading')) tip.style.display = ''; // back to CSS
+      });
+    }
         let globalData = null;
         let isLoading = false;
 
@@ -357,6 +437,7 @@ table th:last-child, table td:last-child {
         }
 
         async function loadInitialData() {
+            setSearchLoading(true, 'Preparing to load data…');
             if (isLoading || globalData) return;
             
             isLoading = true;
@@ -384,6 +465,7 @@ table th:last-child, table td:last-child {
                     
                     addLoadTimeIndicator(totalTime, true);
                     loadingDiv.style.display = 'none';
+                    setSearchLoading(false);
                     isLoading = false;
                     return;
                 }
@@ -453,6 +535,8 @@ table th:last-child, table td:last-child {
                     // Update progress
                     filesProcessed += batch.length;
                     progressSpan.textContent = `${filesProcessed}/${files.length}`;
+                    const pct = Math.round((filesProcessed / files.length) * 100);
+                    setSearchLoading(true, `Loading data… ${filesProcessed}/${files.length} files (${pct}%)`);
                 }
                 
                 // Store processed data
@@ -474,9 +558,11 @@ table th:last-child, table td:last-child {
                 const totalTime = ((endTime - startTime)/1000).toFixed(2);
                 
                 addLoadTimeIndicator(totalTime, false);
+                setSearchLoading(false);
                 
                 loadingDiv.style.display = 'none';
             } catch (error) {
+                setSearchLoading(true, 'Error loading data. Please refresh the page.');
                 console.error('Error loading data:', error);
                 loadingDiv.innerHTML = `<div class="spinner"></div><div>Error loading data: ${error.message}. Please refresh the page.</div>`;
             } finally {
@@ -651,7 +737,10 @@ function addLoadTimeIndicator(totalTime, fromCache) {
             if (!document.getElementById('toggle-yerr').checked) toggleColumn(14, false);
             
         }
-    document.addEventListener('DOMContentLoaded', loadInitialData);
+    document.addEventListener('DOMContentLoaded', () => {
+      initSearchTooltipInteractions();
+      loadInitialData();
+    });
 
     document.addEventListener('DOMContentLoaded', function() {
     // Create the toggle controls
