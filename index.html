@@ -274,7 +274,7 @@ table th:last-child, table td:last-child {
 <body>
     <h1 style="text-align: center;">G4STAB Melting Temperature Prediction Database</h1>
         <div class="description-box">
-            <p> This tool allows users to explore predicted melting temperatures of experimentally validated G-quadruplex (G4) 
+            <p> This tool allows users to explore predicted melting temperatures of experimentally validated DNA G-quadruplex (G4) 
                 using our deep learning model based on various ionic conditions. The data presented provides thermodynamic 
                 stability predictions that may help researchers understand how G4 structures behave in 
                 different ionic environments.</p>
@@ -357,17 +357,16 @@ table th:last-child, table td:last-child {
 
     <script>
     // --- Search button enable/disable & tooltip helpers ---
-    function setSearchLoading(isLoadingFlag, message) {
+    function setSearchLoading(isLoadingFlag) {
       const wrapper = document.getElementById('search-wrapper');
       const btn = document.getElementById('search-btn');
-      if (!wrapper || !btn ) return;
+      if (!wrapper || !btn) return;
       if (isLoadingFlag) {
         wrapper.classList.add('loading');
         btn.setAttribute('disabled', 'disabled');
       } else {
         wrapper.classList.remove('loading');
         btn.removeAttribute('disabled');
-        tip.style.display = 'none';
       }
     }
         let globalData = null;
@@ -683,7 +682,6 @@ function addLoadTimeIndicator(totalTime, fromCache) {
             
         }
     document.addEventListener('DOMContentLoaded', () => { loadInitialData(); });
-    });
 
     document.addEventListener('DOMContentLoaded', function() {
     // Create the toggle controls
