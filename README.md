@@ -28,3 +28,15 @@ This database contains G4 stability predictions across four physiologically rele
 4. Cancer-like (70 mM K⁺, 30 mM Na⁺)
 
 ## Citation
+
+If you use G4STAB in your research, please cite:
+
+```bibtex
+@article{liew2025g4stab,
+  title={G4STAB: A multi-input deep learning model to predict G-quadruplex thermodynamic stability based on sequence and salt concentration},
+  author={Liew, Donn and Dharmatilleke, Akesha Dinuli and See, Edwin and Yong, Ee Hou},
+  journal={Bioinformatics},
+  pages={btaf545},
+  year={2025},
+  publisher={Oxford University Press}
+}
